@@ -66,15 +66,18 @@
       </div>
     </div>
 
+    <dash-chart></dash-chart>
   </el-container>
 </template>
 
 <script>
 import DataDashboard from "@/components/DataDashboard.vue"
+import dashChart from "@/components/dashChart";
 export default {
   name: "BusinessHome",
   components: {
     DataDashboard,
+    dashChart,
   },
   data() {
     return {
@@ -120,7 +123,7 @@ export default {
           { label: "库存紧张", value: 50 },
           { label: "全部商品", value: 500 },
         ];
-        this.cardName = "商品总览",
+        this.cardName = "商品总览";
         this.productStats = data;
       } catch (error) {
         console.error("Failed to fetch product stats:", error);
@@ -173,7 +176,7 @@ export default {
 .el-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: auto;
   padding: 30px 50px; /* 增加左右边距 */
 }
 .el-table th {
@@ -242,7 +245,12 @@ export default {
   font-weight:normal;
   font-size: 14px;
 }
-
+.el-table--small{
+  font-size: 14px !important;
+}
+.el-table__header-wrapper{
+  background: #e3e4e7 !important; /* 浅灰色背景 */
+}
 .cell_span{
   font-size: 15px;
   /*font-weight: lighter;*/

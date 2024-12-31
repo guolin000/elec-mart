@@ -45,6 +45,7 @@ export default {
 .card-header {
   font-size: 16px;
   font-weight: bold;
+  color: #5d646b; /* 数值的颜色 */;
   background: #e3e4e7; /* 浅灰色背景 */
   padding: 10px 20px; /* 上下内边距和左右内边距 */
   border-radius: 6px 6px 0 0; /* 圆角只应用到上边 */
