@@ -1,6 +1,11 @@
 <template>
   <div class="dashboard">
-    <el-container>
+    <!-- 顶部标题部分 -->
+    <div class="card-header">
+      <span>订单统计</span>
+    </div>
+    <!-- 主体内容部分 -->
+    <el-container class="main-content">
       <!-- 左侧数据统计部分 -->
       <el-aside width="300px" class="stats-aside">
         <div class="stat-item" v-for="(stat, index) in stats" :key="index">
@@ -14,6 +19,7 @@
 
       <!-- 右侧图表和日期选择部分 -->
       <el-container>
+        <!-- 日期选择器 -->
         <el-header class="date-picker-header">
           <el-date-picker
               v-model="dateRange"
@@ -21,7 +27,8 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              @change="fetchChartData"
+              @change="onDateChange"
+              class="data_picker"
           />
         </el-header>
         <el-main>
@@ -33,69 +40,90 @@
 </template>
 
 <script>
-import * as echarts from 'echarts';
+import * as echarts from "echarts";
 
 export default {
   name: "dashChart",
+  props: {
+    chartData: {
+      type: Object,
+      required: true,
+    },
+    stats:{
+      type:Array,
+      required: true,
+      default:()=>[
+        { title: '本月订单总数', value: "暂无数据", change: 10, period: '上月' },
+        { title: '本周订单总数', value: "暂无数据", change: -10, period: '上周' },
+        { title: '本月销售总额', value: "暂无数据", change: 10, period: '上月' },
+        { title: '本周销售总额', value: "暂无数据", change: -10, period: '上周' },
+      ]
+    }
+  },
   data() {
     return {
-      // 数据统计部分
-      stats: [
-        { title: '本月订单总数', value: 10000, change: 10, period: '上月' },
-        { title: '本周订单总数', value: 1000, change: -10, period: '上周' },
-        { title: '本月销售总额', value: 100000, change: 10, period: '上月' },
-        { title: '本周销售总额', value: 50000, change: -10, period: '上周' },
-      ],
-      // 日期范围
-      dateRange: [],
-      // 图表实例
-      chart: null,
+      stats: [],
+      dateRange: [], // 绑定日期选择器的日期范围
+      chart: null, // ECharts 实例
     };
   },
+  watch: {
+    // 监听父组件传入的数据变化
+    chartData: {
+      immediate: true,
+      handler(newData) {
+        this.renderChart(newData);
+      },
+    },
+  },
   mounted() {
-    // 初始化图表
-    this.initChart();
-    // 加载初始数据
-    this.fetchChartData();
+    this.chart = echarts.init(document.getElementById("chart"));
+    this.fetchDefaultData();
   },
   methods: {
-    // 初始化 ECharts 图表
-    initChart() {
-      this.chart = echarts.init(document.getElementById('chart'));
+    // 默认加载当前日期为基准的前后三天数据
+    fetchDefaultData() {
+      console.log("子组件加载默认日期");
+      const today = new Date();
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() - 3);
+      const endDate = new Date(today);
+      endDate.setDate(today.getDate() + 3);
+      this.dateRange = [startDate, endDate];
+      console.log( this.formatDateRange(startDate, endDate))
+      // 通知父组件加载默认数据
+      this.$emit("dateChange", this.formatDateRange(startDate, endDate));
     },
-    // 获取图表数据并渲染
-    fetchChartData() {
-      // 模拟异步获取数据
-      const chartData = {
-        dates: ['2023-11-01', '2023-11-02', '2023-11-03', '2023-11-04', '2023-11-05', '2023-11-06', '2023-11-07'],
-        orders: [20, 40, 60, 90, 150, 60, 40],
-        sales: [2000, 4000, 6000, 8000, 10000, 6000, 4000],
-      };
-
-      // 渲染图表
+    // 用户选择日期后触发
+    onDateChange() {
+      if (this.dateRange.length === 2) {
+        const [start, end] = this.dateRange;
+        this.$emit("dateChange", this.formatDateRange(start, end));
+      }
+    },
+    // 格式化日期范围为字符串
+    formatDateRange(startDate, endDate) {
+      const format = (date) =>
+          `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+              2,
+              "0"
+          )}-${String(date.getDate()).padStart(2, "0")}`;
+      return { startDate: format(startDate), endDate: format(endDate) };
+    },
+    // 渲染图表
+    renderChart(chartData) {
       this.chart.setOption({
-        title: { text: '订单统计', left: 'center' },
-        tooltip: { trigger: 'axis' },
-        legend: { data: ['订单总数', '销售总额'], bottom: 0 },
-        xAxis: { type: 'category', data: chartData.dates },
+        title: { text: "订单统计", left: "center" },
+        tooltip: { trigger: "axis" },
+        legend: { data: ["订单总数", "销售总额"], bottom: 0 },
+        xAxis: { type: "category", data: chartData.dates },
         yAxis: [
-          { type: 'value', name: '订单总数' },
-          { type: 'value', name: '销售总额', position: 'right' },
+          { type: "value", name: "订单总数" },
+          { type: "value", name: "销售总额", position: "right" },
         ],
         series: [
-          {
-            name: '订单总数',
-            type: 'line',
-            data: chartData.orders,
-            areaStyle: {},
-          },
-          {
-            name: '销售总额',
-            type: 'line',
-            yAxisIndex: 1,
-            data: chartData.sales,
-            areaStyle: {},
-          },
+          { name: "订单总数", type: "line", data: chartData.orders , areaStyle: {},},
+          { name: "销售总额", type: "line", yAxisIndex: 1, data: chartData.sales , areaStyle: {},},
         ],
       });
     },
@@ -107,12 +135,34 @@ export default {
 .dashboard {
   height: 75vh;
   display: flex;
+  flex-direction: column;
+  background: #f5f7fa;
+  border: 1px solid #e4e7ed;
+  border-radius: 6px;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+  font-size: 16px;
+  font-weight: bold;
+  color: #5d646b; /* 数值的颜色 */;
+  background: #e3e4e7; /* 浅灰色背景 */
+  padding: 10px 20px; /* 上下内边距和左右内边距 */
+  border-radius: 6px 6px 0 0; /* 圆角只应用到上边 */
+  margin-bottom: 0;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
 }
 
 .stats-aside {
-  /*height: 100%;*/
   background-color: #f9f9f9;
   padding: 20px;
+  overflow-y: auto;
 }
 
 .stat-item {
@@ -150,6 +200,6 @@ export default {
 
 .chart-container {
   width: 100%;
-  height: 95%;
+  height: 100%;
 }
 </style>

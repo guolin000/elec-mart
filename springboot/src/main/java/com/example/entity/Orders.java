@@ -1,6 +1,9 @@
 package com.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,6 +23,8 @@ public class Orders implements Serializable {
     private Double price;
     private String status;
 
+    @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date orderTime;
     private List<Cart> cartData;
 
 
@@ -117,6 +122,14 @@ public class Orders implements Serializable {
 
     public String getOrderId() {
         return orderId;
+    }
+
+    public Date getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
     }
 
     public void setOrderId(String orderId) {

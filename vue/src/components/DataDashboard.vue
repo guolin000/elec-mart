@@ -41,6 +41,10 @@ export default {
   width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
+.dashboard-card:hover{
+  transform: translateY(-5px); /* 鼠标悬停时，卡片上升 */
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); /* 鼠标悬停时，阴影增强 */
+}
 
 .card-header {
   font-size: 16px;
