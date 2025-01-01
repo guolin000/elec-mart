@@ -4,7 +4,7 @@
     <div class="front-header">
       <div class="front-header-left" @click="navTo('/front/home')">
         <img src="@/assets/imgs/logo.png" alt="">
-        <div class="title">天猫超市购物商城</div>
+        <div class="title">电子集市</div>
       </div>
       <div class="front-header-center" style="text-align: right">
         <el-input style="width: 200px" placeholder="请输入商品名称" v-model="name"></el-input>
