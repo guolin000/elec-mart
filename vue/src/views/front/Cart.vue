@@ -5,9 +5,9 @@
         <div style="display: flex; font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid;">
           <div style="margin-left: 20px; flex: 1">全部商品（{{ goodsData.length }}件）</div>
 
-            <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">
-                   <el-button type="danger" style=" font-size: 18px;" round @click="dayin">test</el-button>
-            </div>
+<!--            <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">-->
+<!--                   <el-button type="danger" style=" font-size: 18px;" round @click="dayin">test</el-button>-->
+<!--            </div>-->
 
           <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">
             已选商品 ￥ {{totalPrice}} <el-button type="danger" style=" font-size: 18px;" round @click="navTo('/front/check')">结算</el-button>
