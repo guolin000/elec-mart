@@ -109,4 +109,51 @@ public class OrdersService {
         List<Orders> list = ordersMapper.selectAll(orders);
         return PageInfo.of(list);
     }
+
+    /**
+     * 根据商家id和指定日期获取订单总数
+     */
+    public int getOrderCountByMerchantIdAndDate(Integer merchantId, String date) {
+        return ordersMapper.selectOrderCountByMerchantIdAndDate(merchantId, date);
+    }
+
+    public Double getAmountByMerchantIdAndDate(Integer merchantId, String date) {
+        // 假设查询数据库或数据源时，如果没有找到数据，返回 0.0
+        Double totalAmount = ordersMapper.selectAmountByMerchantIdAndDate(merchantId, date);
+
+        // 如果查询结果为 null，返回 0.0
+        if (totalAmount == null) {
+            totalAmount = 0.0;
+        }
+        return totalAmount;
+    }
+
+    /**
+     * 根据商家id和指定日期范围内的订单总数
+     * @param merchantId 商家id
+     * @param startDate 起始日期（格式：yyyy-MM-dd）
+     * @param endDate 结束日期（格式：yyyy-MM-dd）
+     * @return 订单总数
+     */
+    public int getTotalOrderCountByMerchantIdAndDate(Integer merchantId, String startDate, String endDate) {
+        return ordersMapper.getTotalOrderCountByMerchantIdAndDate(merchantId, startDate, endDate);
+    }
+
+    /**
+     * 根据商家id和指定日期范围内的订单总额
+     * @param merchantId 商家id
+     * @param startDate 起始日期（格式：yyyy-MM-dd）
+     * @param endDate 结束日期（格式：yyyy-MM-dd）
+     * @return 订单总额
+     */
+    public Double getTotalAmountByMerchantIdAndDate(Integer merchantId, String startDate, String endDate) {
+        // 获取订单总额
+        Double totalAmount = ordersMapper.getTotalAmountByMerchantIdAndDate(merchantId, startDate, endDate);
+
+        // 如果查询结果为 null，返回 0.0
+        if (totalAmount == null) {
+            totalAmount = 0.0;
+        }
+        return totalAmount;
+    }
 }
