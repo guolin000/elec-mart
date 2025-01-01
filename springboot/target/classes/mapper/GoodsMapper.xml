@@ -9,7 +9,7 @@
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Goods">
-        select goods.*, type.name as typeName, business.name as businessName
+        select goods.*, goods.status, goods.goods_up, type.name as typeName, business.name as businessName
         from goods
         left join type on goods.type_id = type.id
         left join business on goods.business_id = business.id

@@ -267,6 +267,7 @@ export default {
           })
           .catch(err => {
             console.error('获取数据失败:', err);
+            this.$message.error("数据获取失败，请重试！");
           });
     },
     fetchTableData() {

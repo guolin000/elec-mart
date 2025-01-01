@@ -48,7 +48,9 @@
             </template>
             <el-menu-item v-if="user.role === 'ADMIN'" index="/notice">公告信息</el-menu-item>
             <el-menu-item v-if="user.role === 'ADMIN'" index="/type">分类信息</el-menu-item>
-            <el-menu-item index="/goods">商品信息</el-menu-item>
+            <el-menu-item v-if="user.role === 'ADMIN'" index="/goods">商品信息</el-menu-item>
+            <el-menu-item v-if="user.role === 'BUSINESS'" index="/businessGoods">商品信息</el-menu-item>
+            <el-menu-item v-if="user.role === 'BUSINESS'" index="/seckill">秒杀商品管理</el-menu-item>
             <el-menu-item index="/orders">订单管理</el-menu-item>
             <el-menu-item index="/comment">评论管理</el-menu-item>
           </el-submenu>
