@@ -47,6 +47,7 @@ const routes = [
       { path: 'cart', name: 'Cart', meta: { name: '我的购物车' }, component: () => import('../views/front/Cart') },
       { path: 'orders', name: 'Orders', meta: { name: '我的订单' }, component: () => import('../views/front/Orders') },
       { path: 'search', name: 'Search', meta: { name: '搜索页面' }, component: () => import('../views/front/Search') },
+      { path: 'seckill', name: 'Seckill', meta: { name: '秒杀活动' }, component: () => import('../views/front/Seckill') }, // 添加秒杀页面
     ]
   },
   { path: '/login', name: 'Login', meta: { name: '登录' }, component: () => import('../views/Login.vue') },

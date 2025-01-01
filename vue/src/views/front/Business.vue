@@ -5,7 +5,7 @@
         <img :src="businessData.avatar" alt="" style="height: 60px; width: 60px; border-radius: 50%">
         <div style="width: 220px; margin: 0 30px 0 15px; font-size: 20px; font-weight: bold;">
           <div style="height: 30px; line-height: 30px">{{businessData.name}}</div>
-          <img src="@/assets/imgs/icon.png" alt="" style="height: 25px; margin-top: 5px">
+<!--          <img src="@/assets/imgs/icon.png" alt="" style="height: 25px; margin-top: 5px">-->
         </div>
         <div style="width: 150px; height: 100px; padding: 20px">
           <div style="font-size: 16px; height: 30px; line-height: 30px; color: #7F7F7FFF">店铺电话</div>
