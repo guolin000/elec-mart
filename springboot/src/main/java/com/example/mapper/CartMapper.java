@@ -32,6 +32,11 @@ public interface CartMapper {
     Cart selectById(Integer id);
 
     /**
+     * 根据商品ID查询
+     */
+    Cart selectByGoodsId(Integer goodsId);
+
+    /**
       * 查询所有
     */
     List<Cart> selectAll(Cart cart);

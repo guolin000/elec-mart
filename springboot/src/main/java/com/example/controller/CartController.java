@@ -65,6 +65,15 @@ public class CartController {
     }
 
     /**
+     * 根据商品ID查询
+     */
+    @GetMapping("/selectByGoodsId")
+    public Result selectByGoodsId(@RequestParam Integer goodsId) {
+        Cart cart = cartService.selectByGoodsId(goodsId);
+        return Result.success(cart);
+    }
+
+    /**
      * 查询所有
      */
     @GetMapping("/selectAll")

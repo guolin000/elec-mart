@@ -17,6 +17,7 @@
             <div style="color: #666666FF; margin-top: 20px">分类：<a href="#" @click="navTo('/front/type?id=' + goodsData.typeId)">{{goodsData.typeName}}</a></div>
             <div style="color: #666666FF; margin-top: 20px">
               <el-button type="warning" @click="addCart">加入购物车</el-button>
+              <el-button type="warning" @click="buy">立即购买</el-button>
               <el-button type="warning" @click="collect">收藏</el-button>
             </div>
           </el-col>
@@ -60,7 +61,8 @@ export default {
       goodsId: goodsId,
       goodsData: {},
       activeName: 'first',
-      commentData: []
+      commentData: [],
+      buygoodsData: {}
     }
   },
   mounted() {
@@ -77,6 +79,8 @@ export default {
           this.$message.error(res.msg)
         }
       })
+      console.table(this.goodsData)
+      console.log("xixi")
     },
     handleClick(tab, event) {
       this.activeName = tab.name
@@ -116,7 +120,27 @@ export default {
     },
     navTo(url) {
       location.href = url
+    },
+    buy(){
+        this.addCart()
+        this.$request.get('/cart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
+                        if (res.code === '200') {
+console.table(this.res.data)
+                            this.buygoodsData=res.data
+
+this.$router.push({
+                                              name: 'Check',
+                                              query: { selectedData: JSON.stringify(res.data) }
+                                              });
+                        } else {
+                          this.$message.error(res.msg)
+                        }
+                      })
+                      console.table(this.buygoodsData)
+
+
+
     }
-  }
+    }
 }
 </script>

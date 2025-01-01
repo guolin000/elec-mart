@@ -67,6 +67,14 @@ public class CartService {
     }
 
     /**
+     * 根据商品ID查询
+     */
+    public Cart selectByGoodsId(Integer goodsId) {
+        return cartMapper.selectByGoodsId(goodsId);
+    }
+
+
+    /**
      * 查询所有
      */
     public List<Cart> selectAll(Cart cart) {
