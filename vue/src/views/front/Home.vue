@@ -43,7 +43,7 @@
               <div style="margin-top: 10px">Hi，{{user.name}}</div>
             </div>
             <div style="margin-top: 20px; padding: 0 15px">
-              <img src="@/assets/imgs/right.png" alt="" style="height: 150px; width: 100%; border-radius: 20px">
+              <img src="@/assets/imgs/right-home.png" alt="" style="height: 150px; width: 100%; border-radius: 20px">
             </div>
             <div style="margin: 20px 10px 10px 10px; width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
               <i class="el-icon-bell"></i>
