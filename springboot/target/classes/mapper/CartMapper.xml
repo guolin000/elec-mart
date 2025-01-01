@@ -30,11 +30,10 @@
     </select>
 
     <select id="selectByGoodsId" resultType="com.example.entity.Cart">
-        select goods.*, business.name as businessName, type.name as typeName
-        from goods
-                 left join business on goods.business_id = business.id
-                 left join type on goods.type_id = type.id
-        where goods.id = #{id}
+        select
+        <include refid="Base_Column_List" />
+        from cart
+        where goods_id = #{goodsId}
     </select>
 
     <delete id="deleteById">

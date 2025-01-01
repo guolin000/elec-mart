@@ -30,10 +30,13 @@
     </select>
 
     <select id="selectByGoodsId" resultType="com.example.entity.Cart">
-        select
-        <include refid="Base_Column_List" />
+        select cart.*, business.name as businessName, goods.img as goodsImg, goods.name as goodsName, goods.price as goodsPrice, goods.unit as goodUnit
         from cart
-        where goods_id = #{goodsId}
+        left join business on cart.business_id = business.id
+        left join goods on cart.goods_id = goods.id
+        <where>
+            <if test="goodsId != null"> and cart.goods_id = #{goodsId}</if>
+        </where>
     </select>
 
     <delete id="deleteById">

@@ -114,15 +114,7 @@ export default {
                       }
                 })
 
-                this.$request.get('/cart/selectAll?id=' + this.goodsId).then(res => {
-                                      if (res.code === '200') {
-                                        console.table(res.data)
-                                        this.goodsData[0] = res.data
-                                        console.table(this.goodsData)
-                                      } else {
-                                         this.$message.error(res.msg)
-                                      }
-                                })
+
             }
 
             else{
