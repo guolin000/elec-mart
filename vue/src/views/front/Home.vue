@@ -200,13 +200,13 @@ export default {
 }
 .left {
   width: 17%;
-  //background-repeat: no-repeat;
-  //background-image: url('@/assets/imgs/img-l-new.jpg');
+  /*background-repeat: no-repeat;*/
+  /*background-image: url('@/assets/imgs/img-l-new.jpg');*/
 }
 .right {
   width: 17%;
-  //background-repeat: no-repeat;
-  //background-image: url('@/assets/imgs/img-r-new.jpg')
+  /*background-repeat: no-repeat;*/
+  /*background-image: url('@/assets/imgs/img-r-new.jpg')*/
 }
 .el-col-5{
   width: 20%;
