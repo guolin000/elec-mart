@@ -20,7 +20,14 @@ public class Goods implements Serializable {
     private String unit;
     private Integer count;
     private Integer typeId;
+
+
+
     private Integer businessId;
+
+    private String status;
+
+    private String goodsUp;
 
     private String typeName;
     private String businessName;
@@ -48,7 +55,21 @@ public class Goods implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGoodsUp() {
+        return goodsUp;
+    }
+
+    public void setGoodsUp(String goodsUp) {
+        this.goodsUp = goodsUp;
+    }
     public String getImg() {
         return img;
     }

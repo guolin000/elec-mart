@@ -38,5 +38,16 @@ public interface OrdersMapper {
 
     @Select("select * from orders where status = '已完成' or status = '已评价'")
     List<Orders> selectAllOKOrders();
+    /**
+     * 根据商家id和指定日期查询订单总数
+     */
+    int selectOrderCountByMerchantIdAndDate(Integer merchantId, String date);
+    /**
+     * 根据商家id和指定日期查询订单总额
+     */
+    Double selectAmountByMerchantIdAndDate(Integer merchantId, String date);
 
+    int getTotalOrderCountByMerchantIdAndDate(Integer merchantId, String startDate, String endDate);
+
+    Double getTotalAmountByMerchantIdAndDate(Integer merchantId, String startDate, String endDate);
 }
