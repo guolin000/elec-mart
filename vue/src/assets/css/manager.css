@@ -1,11 +1,18 @@
 .manager-container {
     background-color: #f8f8ff;
-    min-height: 100vh;
+    min-height: 140vh;
 }
 
 .manager-header {
     display: flex;
-    background-color: #07c796;
+    background-color: #6d9dce;
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+}
+.manager-header .title {
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .manager-header-left {
@@ -37,7 +44,7 @@
 }
 
 .manager-header-right {
-    width: 200px;
+    width: 250px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -63,15 +70,22 @@
 }
 
 .manager-main-left {
-    width: 200px;
+    width: 250px;
     min-height: calc(100vh - 60px);
     box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+    color: white;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
 }
 
 .manager-main-right {
     flex: 1;
     width: 0;
     padding: 10px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    box-sizing: border-box;
 }
 
 .manager-main-right .search {
@@ -130,8 +144,8 @@
 
 .el-menu-item.is-active {
     background-color: #cdf4ea !important;
-    color: #07c796;
-    border-right: 3px solid #07c796;
+    color:  #7ea3c9;
+    border-right: 3px solid #7ea3c9;
 }
 
 .el-menu--inline .el-menu-item {
@@ -139,7 +153,7 @@
 }
 
 .el-menu .is-active {
-    color: #07c796 !important;
+    color:  #7ea3c9 !important;
 }
 
 .el-submenu__title:hover {
@@ -153,7 +167,7 @@
 
 .el-menu-item:hover {
     background-color: #e6f9f5 !important;
-    color: #07c796;
+    color:  #7ea3c9;
 }
 
 .el-submenu__icon-arrow {

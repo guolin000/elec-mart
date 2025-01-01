@@ -48,7 +48,6 @@
           border
           stripe
           :data="tableData"
-          style="width: 100%"
           :span-method="objectSpanMethod"
       >
         <!-- 动态渲染表格列 -->
@@ -59,12 +58,27 @@
         </el-table-column>
       </el-table>
     </div>
+
+    <div class="dashboard-container">
+      <div class="dashboard-row">
+        <data-dashboard :card-name="cardName" :stats="productStats" @refresh-data="fetchProductStats" />
+        <data-dashboard :card-name="cardName2" :stats="userStats" @refresh-data="fetchUserStats" />
+      </div>
+    </div>
+
+    <dash-chart></dash-chart>
   </el-container>
 </template>
 
 <script>
+import DataDashboard from "@/components/DataDashboard.vue"
+import dashChart from "@/components/dashChart";
 export default {
   name: "BusinessHome",
+  components: {
+    DataDashboard,
+    dashChart,
+  },
   data() {
     return {
       orderCount: 200,
@@ -80,11 +94,17 @@ export default {
       ],
       tableData: [],
       needMergeArr: ['a1'],
-      rowMergeArrs: {}
+      rowMergeArrs: {},
+      productStats:[],
+      userStats:[],
+      cardName: "",
+      cardName2: "",
     };
   },
   mounted() {
     this.fetchTableData();
+    this.fetchUserStats();
+    this.fetchProductStats()
     // 模拟数据变化
     setTimeout(() => {
       this.orderCount = 220;
@@ -92,6 +112,40 @@ export default {
     }, 3000); // 3秒后更新数据
   },
   methods: {
+    async fetchProductStats() {
+      // 模拟一个异步接口请求
+      try {
+        // const response = await fetch("/api/product-stats");
+        // const data = await response.json();
+        const data =  [
+          { label: "已下架", value: 100 },
+          { label: "已上架", value: 400 },
+          { label: "库存紧张", value: 50 },
+          { label: "全部商品", value: 500 },
+        ];
+        this.cardName = "商品总览";
+        this.productStats = data;
+      } catch (error) {
+        console.error("Failed to fetch product stats:", error);
+      }
+    },
+    async fetchUserStats() {
+      // 模拟一个异步接口请求
+      try {
+        // const response = await fetch("/api/product-stats");
+        // const data = await response.json();
+        const data =  [
+          { label: "今日新增", value: 100 },
+          { label: "昨日新增", value: 400 },
+          { label: "本月新增", value: 50 },
+          { label: "会员总数", value: 500 },
+        ];
+        this.cardName2 = "用户总览";
+        this.userStats = data;
+      } catch (error) {
+        console.error("Failed to fetch product stats:", error);
+      }
+    },
     fetchTableData() {
       const dataFromAPI = [
         { a1: '待付款订单', a2: 10, a3: '已完成订单', a4: 10, a5: '待确认收货订单', a6: 10 },
@@ -122,7 +176,7 @@ export default {
 .el-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: auto;
   padding: 30px 50px; /* 增加左右边距 */
 }
 .el-table th {
@@ -134,7 +188,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between; /* 卡片之间的间距 */
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
   width: 100%;
 }
 
@@ -150,13 +204,6 @@ export default {
 .small-card:hover {
   transform: translateY(-5px); /* 鼠标悬停时，卡片上升 */
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); /* 鼠标悬停时，阴影增强 */
-}
-
-/* 媒体查询，对于小屏幕，卡片100%宽度 */
-@media (max-width: 768px) {
-  .small-card {
-    flex: 1 1 100%;
-  }
 }
 
 .icon-large {
@@ -192,23 +239,38 @@ export default {
   font-size: 20px; /* 增加数值的字体大小 */
   font-weight: bold; /* 数值加粗 */
 }
-/*.table_span{*/
-/*  font-size: 17px;*/
-/*  font-weight: bold;*/
-/*}*/
+
 .number-cell {
   color: red;
   font-weight:normal;
-  font-size: 12px;
+  font-size: 14px;
 }
-
+.el-table--small{
+  font-size: 14px !important;
+}
+.el-table__header-wrapper{
+  background: #e3e4e7 !important; /* 浅灰色背景 */
+}
 .cell_span{
-  font-size: 13px;
+  font-size: 15px;
   /*font-weight: lighter;*/
 }
 /* 确保表格和卡片区之间的间距 */
 .table-container {
   margin-top: 20px;
-  padding: 0 20px;
+  /*padding: 0 20px;*/
+}
+.dashboard-container {
+  margin-top: 20px; /* 上方的 margin */
+}
+
+.dashboard-row {
+  display: flex; /* 使用 Flexbox 布局 */
+  gap: 20px; /* 卡片之间的间距 */
+  justify-content: space-between; /* 使卡片分布均匀 */
+}
+
+data-dashboard {
+  flex: 1; /* 让每个卡片平分可用空间 */
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <div class="manager-container">
-    <!--  头部  -->
-    <div class="manager-header">
+  <el-container>
+    <!-- 头部固定 -->
+    <el-header class="manager-header" height="70px">
       <div class="manager-header-left">
         <img src="@/assets/imgs/logo.png" style="border-radius: 10px" />
         <div class="title">后台管理系统</div>
@@ -18,7 +18,7 @@
         <el-dropdown placement="bottom">
           <div class="avatar">
             <img :src="user.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'" />
-            <div>{{ user.name ||  '管理员' }}</div>
+            <div>{{ user.name || '管理员' }}</div>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="goToPerson">个人信息</el-dropdown-item>
@@ -27,20 +27,20 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-    </div>
+    </el-header>
 
-    <!--  主体  -->
-    <div class="manager-main">
-      <!--  侧边栏  -->
-      <div class="manager-main-left">
+    <!-- 主体区域 -->
+    <el-container>
+      <!-- 侧边栏固定 -->
+      <el-aside width="250px" class="manager-main-left">
         <el-menu :default-openeds="['info', 'user']" router style="border: none" :default-active="$route.path">
           <el-menu-item v-if="user.role === 'ADMIN'" index="/home">
             <i class="el-icon-s-home"></i>
-            <span slot="title">系统首页</span>
+            <span>系统首页</span>
           </el-menu-item>
           <el-menu-item v-if="user.role === 'BUSINESS'" index="/businessHome">
             <i class="el-icon-s-home"></i>
-            <span slot="title">店铺信息</span>
+            <span>店铺信息</span>
           </el-menu-item>
           <el-submenu index="info">
             <template slot="title">
@@ -53,7 +53,7 @@
             <el-menu-item index="/comment">评论管理</el-menu-item>
           </el-submenu>
 
-          <el-submenu index="user"  v-if="user.role === 'ADMIN'">
+          <el-submenu index="user" v-if="user.role === 'ADMIN'">
             <template slot="title">
               <i class="el-icon-menu"></i><span>用户管理</span>
             </template>
@@ -62,15 +62,14 @@
             <el-menu-item index="/user">用户信息</el-menu-item>
           </el-submenu>
         </el-menu>
-      </div>
+      </el-aside>
 
-      <!--  数据表格  -->
-      <div class="manager-main-right">
+      <!-- 右侧内容可滚动 -->
+      <el-main class="manager-main-right">
         <router-view @update:user="updateUser" />
-      </div>
-    </div>
-
-  </div>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <script>
@@ -83,19 +82,17 @@ export default {
   },
   created() {
     if (!this.user.id) {
-      // this.$router.push('/login')'
       this.$router.push('/front/home')
     }
   },
   methods: {
     updateUser() {
-      this.user = JSON.parse(localStorage.getItem('xm-user') || '{}')   // 重新获取下用户的最新信息
+      this.user = JSON.parse(localStorage.getItem('xm-user') || '{}') // 重新获取用户最新信息
     },
     goToPerson() {
       if (this.user.role === 'ADMIN') {
         this.$router.push('/adminPerson')
-      }
-      if (this.user.role === 'BUSINESS') {
+      } else if (this.user.role === 'BUSINESS') {
         this.$router.push('/businessPerson')
       }
     },
