@@ -97,4 +97,38 @@
         where id = #{id}
     </update>
 
+    <!-- 查询商家在指定日期的订单总数 -->
+    <select id="selectOrderCountByMerchantIdAndDate" resultType="int">
+        SELECT COUNT(*)
+        FROM orders
+        WHERE business_id = #{merchantId}
+        AND DATE(order_time) = #{date}  <!-- 使用精确日期匹配 -->
+    </select>
+
+    <!-- 查询商家在指定日期的订单总额 -->
+    <select id="selectAmountByMerchantIdAndDate" resultType="double">
+        SELECT SUM(price)
+        FROM orders
+        WHERE business_id = #{merchantId}
+        AND DATE(order_time) = #{date}  <!-- 使用 DATE() 函数忽略时间部分 -->
+    </select>
+
+    <!-- 根据商家id和日期范围查询订单总数 -->
+    <select id="getTotalOrderCountByMerchantIdAndDate" resultType="int">
+        SELECT COUNT(*)
+        FROM orders
+        WHERE business_id = #{merchantId}
+          AND order_time BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <!-- 根据商家id和日期范围查询订单总额 -->
+    <select id="getTotalAmountByMerchantIdAndDate" resultType="double">
+        SELECT SUM(price)
+        FROM orders
+        WHERE business_id = #{merchantId}
+          AND order_time BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+
+
 </mapper>
