@@ -1,9 +1,9 @@
 <template>
   <div class="main-content">
-    <div style="height: 60px; background-color: #C566F6FF"></div>
+    <div style="height: 30px;"></div>
     <div style="display: flex">
       <div class="left"></div>
-      <div style="width: 66%; background-color: white; margin-bottom: 50px">
+      <div style="width: 85%; background-color: white; margin-bottom: 50px;border-radius: 20px">
         <div style="color: #FE0137FF; margin: 15px 0 15px 18px; font-weight: bold; font-size: 16px">主题市场</div>
         <div style="display: flex; margin: 0 25px; height: 550px">
           <div style="flex: 2">
@@ -200,13 +200,13 @@ export default {
 }
 .left {
   width: 17%;
-  background-repeat: no-repeat;
-  background-image: url('@/assets/imgs/left-img.png');
+  //background-repeat: no-repeat;
+  //background-image: url('@/assets/imgs/img-l-new.jpg');
 }
 .right {
   width: 17%;
-  background-repeat: no-repeat;
-  background-image: url('@/assets/imgs/right-img.png')
+  //background-repeat: no-repeat;
+  //background-image: url('@/assets/imgs/img-r-new.jpg')
 }
 .el-col-5{
   width: 20%;
