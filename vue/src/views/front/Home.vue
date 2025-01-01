@@ -52,7 +52,7 @@
             </div>
             <div style="display: flex; margin-top: 50px">
               <div style="flex: 1; text-align: center">
-                <a href="#" @click="navTo('/front/collect')">
+                <a href="#" @click="navTo('/front/seckill')">
                   <img src="@/assets/imgs/收藏.png" alt="" style="height: 25px; width: 25px">
                   <div>我的收藏</div>
                 </a>
