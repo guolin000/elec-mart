@@ -116,21 +116,24 @@ export default {
       notice: [],
       goodsData: [],
       recommendData: [],
+      // 上轮播图
       carousel_top: [
-        require('@/assets/imgs/carousel-1.png'),
-        require('@/assets/imgs/carousel-2.png'),
-        require('@/assets/imgs/carousel-9.png'),
+        require('@/assets/imgs/slider-1.png'),
+        require('@/assets/imgs/slider-2.png'),
+        require('@/assets/imgs/slider-3.png'),
       ],
+      // 左轮播图
       carousel_left: [
-        require('@/assets/imgs/carousel-3.png'),
-        require('@/assets/imgs/carousel-4.png'),
-        require('@/assets/imgs/carousel-5.png'),
+        require('@/assets/imgs/slider-4.png'),
+        require('@/assets/imgs/slider-5.png'),
+        require('@/assets/imgs/slider-6.png'),
       ],
+      // 右轮播图
       carousel_right: [
-        require('@/assets/imgs/carousel-6.png'),
-        require('@/assets/imgs/carousel-7.png'),
-        require('@/assets/imgs/carousel-8.png'),
-      ],
+        require('@/assets/imgs/slider-5.png'),
+        require('@/assets/imgs/slider-6.png'),
+        require('@/assets/imgs/slider-7.png'),
+      ]
     }
   },
   mounted() {
@@ -200,13 +203,13 @@ export default {
 }
 .left {
   width: 17%;
-  /*background-repeat: no-repeat;*/
-  /*background-image: url('@/assets/imgs/img-l-new.jpg');*/
+  //background-repeat: no-repeat;
+  //background-image: url('@/assets/imgs/bg4.jpg');
 }
 .right {
   width: 17%;
-  /*background-repeat: no-repeat;*/
-  /*background-image: url('@/assets/imgs/img-r-new.jpg')*/
+  //background-repeat: no-repeat;
+
 }
 .el-col-5{
   width: 20%;
