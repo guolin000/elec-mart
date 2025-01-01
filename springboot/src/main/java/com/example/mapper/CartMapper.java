@@ -34,7 +34,7 @@ public interface CartMapper {
     /**
      * 根据商品ID查询
      */
-    Cart selectByGoodsId(Integer goodsId);
+    List<Cart> selectByGoodsId(Integer goodsId);
 
     /**
       * 查询所有

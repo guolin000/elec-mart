@@ -69,8 +69,8 @@ public class CartController {
      */
     @GetMapping("/selectByGoodsId")
     public Result selectByGoodsId(@RequestParam Integer goodsId) {
-        Cart cart = cartService.selectByGoodsId(goodsId);
-        return Result.success(cart);
+        List<Cart> list = cartService.selectByGoodsId(goodsId);
+        return Result.success(list);
     }
 
     /**

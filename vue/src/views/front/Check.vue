@@ -5,6 +5,10 @@
         <div style="display: flex; font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid;">
           <div style="margin-left: 20px; flex: 1">订单结算</div>
 
+<!--          <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">-->
+<!--            <el-button type="danger" style=" font-size: 18px;" round @click="dayin">test</el-button>-->
+<!--          </div>-->
+
 
           <div style="flex: 2; text-align: right; padding-right: 40px">
             <el-select v-model="addressId" placeholder="请选择收货地址" style="width: 50%">
@@ -81,7 +85,8 @@ export default {
       addressId: null,
       addressData: [],
       selectedData: [],
-      selectedValue: 'option1'  // 默认选中的值
+      selectedValue: 'option1',  // 默认选中的值
+      goodsId:null
     }
   },
   mounted() {
@@ -103,12 +108,19 @@ export default {
             this.goodsId=Number(this.$route.query.buyGoodsId)
             if(this.goodsId!=null && !Number.isNaN(this.goodsId)){
 
-                console.log(this.goodsId)
+                // console.log(this.goodsId)
                 this.$request.get('/cart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
                       if (res.code === '200') {
                         console.table(res.data)
-                        this.goodsData[0] = res.data
+                        this.goodsData = res.data
                         console.table(this.goodsData)
+                        //计算总价
+                        this.totalPrice = 0
+                        this.goodsData.forEach(item => {
+                          console.log("111")
+                          console.log( item.goodsPrice)
+                          this.totalPrice += item.goodsPrice * item.num
+                        })
                       } else {
                          this.$message.error(res.msg)
                       }
@@ -116,28 +128,39 @@ export default {
 
 
             }
-
             else{
                 const selectedData = this.$route.query.selectedData;
-
-                          if (selectedData) {
-                            this.goodsData = JSON.parse(selectedData);
-                          }
-                      console.table(this.goodsData)
-
+                if (selectedData) {
+                    this.goodsData = JSON.parse(selectedData);
+                }
+                console.table(this.goodsData)
+              //计算总价
+                this.totalPrice = 0
+                this.goodsData.forEach(item => {
+                    console.log("111")
+                    console.log( item.goodsPrice)
+                    this.totalPrice += item.goodsPrice * item.num
+                })
 
             }
-
+      // console.table(this.goodsData)
     //计算总价
-                      this.totalPrice = 0
-                            this.goodsData.forEach(item => {
-                            console.log( item.goodsPrice)
-                            this.totalPrice += item.goodsPrice * item.num
-                      })
+    //                   this.totalPrice = 0
+    //                         this.goodsData.forEach(item => {
+    //                           console.log("111")
+    //                         console.log( item.goodsPrice)
+    //                         this.totalPrice += item.goodsPrice * item.num
+    //                   })
 
 
 
         },
+
+    dayin(){
+      console.table(this.goodsData)
+    },
+
+
     navTo(url) {
       location.href = url
     },
