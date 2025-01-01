@@ -44,7 +44,7 @@
 }
 
 .manager-header-right {
-    width: 250px;
+    width: 200px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -70,7 +70,7 @@
 }
 
 .manager-main-left {
-    width: 250px;
+    width: 200px !important;
     min-height: calc(100vh - 60px);
     box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
     color: white;

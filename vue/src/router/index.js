@@ -18,7 +18,7 @@ const routes = [
     children: [
       { path: '403', name: 'NoAuth', meta: { name: '无权限' }, component: () => import('../views/manager/403') },
       { path: 'home', name: 'Home', meta: { name: '系统首页' }, component: () => import('../views/manager/Home') },
-      {path: '/businessHome',name:'BusinessHome',meta: {name: '店铺信息'},component: () => import ('../views/manager/BusinessHome')},
+      {path: 'businessHome',name:'BusinessHome',meta: {name: '店铺信息'},component: () => import ('../views/manager/BusinessHome')},
       { path: 'admin', name: 'Admin', meta: { name: '管理员信息' }, component: () => import('../views/manager/Admin') },
       { path: 'business', name: 'Business', meta: { name: '商家信息' }, component: () => import('../views/manager/Business') },
       { path: 'user', name: 'User', meta: { name: '用户信息' }, component: () => import('../views/manager/User') },
@@ -28,6 +28,8 @@ const routes = [
       { path: 'notice', name: 'Notice', meta: { name: '公告信息' }, component: () => import('../views/manager/Notice') },
       { path: 'type', name: 'Type', meta: { name: '分类信息' }, component: () => import('../views/manager/Type') },
       { path: 'goods', name: 'Goods', meta: { name: '商品信息' }, component: () => import('../views/manager/Goods') },
+      { path: 'businessGoods', name: 'BusinessGoods', meta: { name: '商品信息' }, component: () => import('../views/manager/BusinessGoods') },
+      { path: 'seckill', name: 'Seckill', meta: { name: '秒杀商品管理' }, component: () => import('../views/manager/Seckill') },
       { path: 'orders', name: 'Orders', meta: { name: '订单管理' }, component: () => import('../views/manager/Orders') },
       { path: 'comment', name: 'Comment', meta: { name: '评论管理' }, component: () => import('../views/manager/Comment') },
     ]
