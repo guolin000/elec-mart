@@ -100,19 +100,52 @@ export default {
       })
     },
     loadGoods() {
-      const selectedData = this.$route.query.selectedData;
+            this.goodsId=Number(this.$route.query.buyGoodsId)
+            if(this.goodsId!=null && !Number.isNaN(this.goodsId)){
 
-          if (selectedData) {
-            this.goodsData = JSON.parse(selectedData);
-          }
-      console.table(this.goodsData)
-      //计算总价
-      this.totalPrice = 0
-            this.goodsData.forEach(item => {
-            this.totalPrice += item.goodsPrice * item.num
-      })
+                console.log(this.goodsId)
+                this.$request.get('/cart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
+                      if (res.code === '200') {
+                        console.table(res.data)
+                        this.goodsData[0] = res.data
+                        console.table(this.goodsData)
+                      } else {
+                         this.$message.error(res.msg)
+                      }
+                })
 
-    },
+                this.$request.get('/cart/selectAll?id=' + this.goodsId).then(res => {
+                                      if (res.code === '200') {
+                                        console.table(res.data)
+                                        this.goodsData[0] = res.data
+                                        console.table(this.goodsData)
+                                      } else {
+                                         this.$message.error(res.msg)
+                                      }
+                                })
+            }
+
+            else{
+                const selectedData = this.$route.query.selectedData;
+
+                          if (selectedData) {
+                            this.goodsData = JSON.parse(selectedData);
+                          }
+                      console.table(this.goodsData)
+
+
+            }
+
+    //计算总价
+                      this.totalPrice = 0
+                            this.goodsData.forEach(item => {
+                            console.log( item.goodsPrice)
+                            this.totalPrice += item.goodsPrice * item.num
+                      })
+
+
+
+        },
     navTo(url) {
       location.href = url
     },

@@ -122,24 +122,26 @@ export default {
       location.href = url
     },
     buy(){
-        this.addCart()
-        this.$request.get('/cart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
-                        if (res.code === '200') {
-console.table(this.res.data)
-                            this.buygoodsData=res.data
+            this.addCart()
+            console.log(this.goodsId)
+            this.$router.push({
+                 name: 'Check',
+                 query: { buyGoodsId: this.goodsId }
+            });
+        /**
+            //this.addCart()
+            this.$request.get('/cart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
+                if (res.code === '200') {
+                    //console.table(res.data)
+                    this.buygoodsData[0]=res.data
+                    console.table(this.buygoodsData)
 
-this.$router.push({
-                                              name: 'Check',
-                                              query: { selectedData: JSON.stringify(res.data) }
-                                              });
-                        } else {
-                          this.$message.error(res.msg)
-                        }
-                      })
-                      console.table(this.buygoodsData)
-
-
-
+                } else {
+                    this.$message.error(res.msg)
+                }
+            })
+                         // console.table(this.buygoodsData)
+    **/
     }
     }
 }
