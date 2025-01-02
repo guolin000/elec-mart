@@ -114,12 +114,10 @@ export default {
 .left {
   width: 17%;
   background-repeat: no-repeat;
-  background-image: url('@/assets/imgs/left-img.png');
 }
 .right {
   width: 17%;
   background-repeat: no-repeat;
-  background-image: url('@/assets/imgs/right-img.png');
 }
 .el-col-5 {
   width: 20%;

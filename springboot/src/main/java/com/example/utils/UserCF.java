@@ -13,7 +13,7 @@ public class UserCF {
 
     /**
      * 方法描述: 推荐商品id列表
-     *
+     * 基于用户的协同过滤推荐算法
      * @param userId 当前用户
      * @param list   用户商品评分数据
      * @return {@link List<Integer>}

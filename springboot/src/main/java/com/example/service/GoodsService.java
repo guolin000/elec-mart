@@ -139,6 +139,7 @@ public class GoodsService {
         // 定义一个存储最后返回给前端的商品List
         List<Goods> recommendResult;
 
+        // 使用多线程和线程池 (ExecutorService)，程序并行计算每个商品和每个用户之间的交互权重
         // 创建一个栅栏，等待所有的异步处理都结束后，再往下走
         CountDownLatch countDownLatch = new CountDownLatch(allGoods.size() * allUsers.size());
         // 创建一个线程池
@@ -171,17 +172,18 @@ public class GoodsService {
                     if (commentOptional.isPresent()) {
                         index += 2;
                     }
+                    // // 如果用户与商品之间有任何交互（即权重大于1），就记录下来
                     if (index > 1) {
                         RelateDTO relateDTO = new RelateDTO(userId, goodsId, index);
                         data.add(relateDTO);
                     }
-                    countDownLatch.countDown();
+                    countDownLatch.countDown(); //任务完成，计数器减一
                 });
             }
         }
 
         try {
-            countDownLatch.await();
+            countDownLatch.await(); // 等待所有异步任务完成
             threadPool.shutdown();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -194,16 +196,6 @@ public class GoodsService {
                     .limit(10).collect(Collectors.toList());
         }
 
-
-//        if (CollectionUtil.isEmpty(recommendResult)) {
-//            // 随机给它推荐10个
-//            return getRandomGoods(10);
-//        }
-//        if (recommendResult.size() < 10) {
-//            int num = 10 - recommendResult.size();
-//            List<Goods> list = getRandomGoods(num);
-//            result.addAll(list);
-//        }
         return recommendResult;
     }
 
