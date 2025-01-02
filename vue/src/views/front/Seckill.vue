@@ -109,17 +109,17 @@ export default {
 .main-content {
   min-height: 100vh;
   background-size: 100%;
-  /*background-image: url('@/assets/imgs/img.png');*/
+  background-image: url('@/assets/imgs/img.png');
 }
 .left {
   width: 17%;
   background-repeat: no-repeat;
-  /*background-image: url('@/assets/imgs/left-img.png');*/
+  background-image: url('@/assets/imgs/bg2.jpg');
 }
 .right {
   width: 17%;
   background-repeat: no-repeat;
-  /*background-image: url('@/assets/imgs/right-img.png');*/
+  background-image: url('@/assets/imgs/bg3.jpg');
 }
 .el-col-5 {
   width: 20%;

@@ -116,12 +116,8 @@ export default {
     this.fetchTableData();
     this.fetchUserStats();
     this.fetchProductStats();
+    this.fetchCardData();
     this.getDateRanges();
-    // 模拟数据变化
-    setTimeout(() => {
-      this.orderCount = 220;
-      this.salesAmount = 5500.00;
-    }, 3000); // 3秒后更新数据
   },
   methods: {
     async fetchProductStats() {
@@ -158,7 +154,6 @@ export default {
       } catch (error) {
         console.error("Failed to fetch product stats:", error);
       }
-      //获取数据信息
 
     },
     getDateRanges() {
@@ -269,6 +264,26 @@ export default {
             console.error('获取数据失败:', err);
             this.$message.error("数据获取失败，请重试！");
           });
+    },
+    fetchCardData() {
+      const today = new Date();
+      const yestDay = new Date(today);
+      yestDay.setDate(today.getDate() - 1);
+      this.$request.get(`/orders/getOrderData`, {
+        params: {
+          merchantId:this.user.id,
+          startDate: yestDay,
+          endDate: today,
+        }
+      }).then(res =>{
+        console.log("Chart data received222:",res);
+        this.orderCount = res.orders[1];
+        this.salesAmount = res.sales[1];
+        this.salesAmountOld = res.sales[0];
+      }).catch(error=>{
+        console.error("Failed to fetch chart data:", error);
+        this.$message.error("数据获取失败，请重试！");
+      })
     },
     fetchTableData() {
       const dataFromAPI = [
