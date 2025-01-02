@@ -22,16 +22,20 @@ public class CoreMath {
      * 计算相关系数并排序
      */
     public static Map<Integer, Double> computeNeighbor(Integer key, Map<Integer, List<RelateDTO>> map, int type) {
+        // 用户和给定用户（key）之间的关系距离
         Map<Integer, Double> distMap = new TreeMap<>();
+        // 当前用户与商品之间的交互信息
         List<RelateDTO> userItems = map.get(key);
+
         if (CollectionUtil.isNotEmpty(userItems)) {
             map.forEach((k, v) -> {
                 //排除此用户
                 if (!k.equals(key)) {
-                    //关系系数
+                    // 计算当前用户与该用户之间的关系系数
                     double coefficient = relateDist(v, userItems, type);
-                    //关系距离
+                    //将系数转化为一个距离值
                     double distance = Math.abs(coefficient);
+                    // 与当前用户的关系距离
                     distMap.put(k, distance);
                 }
             });
@@ -47,12 +51,15 @@ public class CoreMath {
         List<Integer> xs = new ArrayList<>();
         List<Integer> ys = new ArrayList<>();
         xList.forEach(x -> yList.forEach(y -> {
+            // 基于商品（GoodsId）来计算
             if (type == 0) {
                 if (x.getGoodsId().equals(y.getGoodsId())) {
                     xs.add(x.getIndex());
                     ys.add(y.getIndex());
                 }
-            } else {
+            }
+            //基于用户（UseId）来计算
+            else {
                 if (x.getUseId().equals(y.getUseId())) {
                     xs.add(x.getIndex());
                     ys.add(y.getIndex());
@@ -67,7 +74,6 @@ public class CoreMath {
      * @param xs x集合
      * @param ys y集合
      * @Return {@link double}
-     * @author B站 UP：武哥聊编程
      */
     public static double getRelate(List<Integer> xs, List<Integer> ys) {
         int n = xs.size();
