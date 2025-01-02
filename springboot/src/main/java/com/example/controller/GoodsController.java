@@ -97,6 +97,10 @@ public class GoodsController {
         return Result.success(list);
     }
 
+    /**
+     * 基于用户的协同过滤算法
+     * @return
+     */
     @GetMapping("/recommend")
     public Result recommend() {
         List<Goods> list = goodsService.recommend();
