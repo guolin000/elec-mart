@@ -51,6 +51,7 @@ const routes = [
       { path: 'search', name: 'Search', meta: { name: '搜索页面' }, component: () => import('../views/front/Search') },
       { path: 'check', name: 'Check', meta: { name: '结算页面' }, component: () => import('../views/front/Check') },
       { path: 'seckill', name: 'Seckill', meta: { name: '秒杀活动' }, component: () => import('../views/front/Seckill') }, // 添加秒杀页面
+      { path: 'product', name: 'Product', meta: { name: '秒杀商品' }, component: () => import('../views/front/Product') },
     ]
   },
   { path: '/login', name: 'Login', meta: { name: '登录' }, component: () => import('../views/Login.vue') },
