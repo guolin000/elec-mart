@@ -3,6 +3,8 @@ package com.example.controller;
 import com.example.common.Result;
 import com.example.entity.Goods;
 import com.example.service.GoodsService;
+import com.example.utils.GoodsToggleBatchDTO;
+import com.example.utils.GoodsToggleDTO;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +47,19 @@ public class GoodsController {
         goodsService.deleteBatch(ids);
         return Result.success();
     }
-
+    /**
+     * 上下架
+     */
+    @PutMapping("/toggle")
+    public Result toggleGoods(@RequestBody GoodsToggleDTO dto) {
+        goodsService.toggleGoods(dto);
+        return Result.success();
+    }
+    @PutMapping("/toggleUp/batch")
+    public Result toggleUpBatch(@RequestBody GoodsToggleBatchDTO dto) {
+        goodsService.toggleUpBatch(dto);
+        return Result.success();
+    }
     /**
      * 修改
      */

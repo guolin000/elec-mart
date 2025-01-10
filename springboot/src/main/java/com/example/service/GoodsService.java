@@ -5,11 +5,14 @@ import cn.hutool.core.util.ObjectUtil;
 import com.example.common.enums.RoleEnum;
 import com.example.entity.*;
 import com.example.mapper.*;
+import com.example.utils.GoodsToggleBatchDTO;
+import com.example.utils.GoodsToggleDTO;
 import com.example.utils.TokenUtils;
 import com.example.utils.UserCF;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -62,6 +65,30 @@ public class GoodsService {
         for (Integer id : ids) {
             goodsMapper.deleteById(id);
         }
+    }
+    /**
+     * 上架
+     */
+    public void toggleById(Integer id){
+        goodsMapper.toggleById(id);
+    }
+    @Transactional
+    public void toggleGoods(GoodsToggleDTO dto) {
+        // 更新商品的上下架状态
+        goodsMapper.updateGoodsUpById(dto.getId(), dto.getGoodsUp());
+    }
+    /**
+     * 批量上架
+     */
+    public  void toggleBatch(List<Integer> ids){
+        for (Integer id : ids){
+            goodsMapper.toggleById(id);
+        }
+    }
+    @Transactional
+    public void toggleUpBatch(GoodsToggleBatchDTO dto) {
+        // 更新商品的上下架状态
+        goodsMapper.updateGoodsUpByIds(dto.getIds(), dto.getGoodsUp());
     }
 
     /**

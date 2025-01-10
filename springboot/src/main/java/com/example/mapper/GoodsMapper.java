@@ -1,7 +1,9 @@
 package com.example.mapper;
 
 import com.example.entity.Goods;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -26,6 +28,11 @@ public interface GoodsMapper {
     int updateById(Goods goods);
 
     /**
+     * 根据id将数据库表中的goods_up字段改为“true"
+     */
+    int toggleById(Integer id);
+
+    /**
       * 根据ID查询
     */
     Goods selectById(Integer id);
@@ -46,4 +53,16 @@ public interface GoodsMapper {
 
     @Select("select * from goods where name like concat('%', #{name}, '%')")
     List<Goods> selectByName(String name);
+
+    @Update("UPDATE goods SET goods_up = #{goodsUp} WHERE id = #{id}")
+    int updateGoodsUpById(@Param("id") Integer id, @Param("goodsUp") String goodsUp);
+
+    @Update("<script>" +
+            "UPDATE goods SET goods_up = #{goodsUp} " +
+            "WHERE id IN " +
+            "<foreach item='id' collection='ids' open='(' separator=',' close=')'>" +
+            "#{id}" +
+            "</foreach>" +
+            "</script>")
+    int updateGoodsUpByIds(@Param("ids") List<Integer> ids, @Param("goodsUp") String goodsUp);
 }

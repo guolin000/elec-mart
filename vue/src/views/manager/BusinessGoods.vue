@@ -15,7 +15,7 @@
     <div class="table">
       <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="id" label="序号" width="80" align="center" sortable></el-table-column>
+<!--        <el-table-column prop="id" label="序号" width="80" align="center" sortable></el-table-column>-->
         <el-table-column label="商品主图">
           <template v-slot="scope">
             <div style="display: flex; align-items: center">
@@ -31,7 +31,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="price" label="商品价格" show-overflow-tooltip></el-table-column>
-<!--        <el-table-column prop="unit" label="计件单位" show-overflow-tooltip></el-table-column>-->
+        <el-table-column prop="count" label="商品库存" show-overflow-tooltip></el-table-column>
+
         <el-table-column prop="typeName" label="商品分类" show-overflow-tooltip></el-table-column>
 <!--        <el-table-column prop="businessName" label="所属商家" show-overflow-tooltip></el-table-column>-->
 
@@ -45,13 +46,14 @@
         <!-- 显示数据库中的上下架状态 -->
         <el-table-column prop="goods_up" label="上下架" align="center" width="120">
           <template v-slot="scope">
-            <el-tag :type="scope.row.goods_up ? 'success' : 'info'">
-              {{ scope.row.goods_up ? '上架' : '下架' }}
+            <el-tag :type="scope.row.goodsUp === 'true' ? 'success' : 'info'">
+              {{ scope.row.goodsUp === 'true' ? '已上架' : '已下架' }}
             </el-tag>
           </template>
         </el-table-column>
 
         <!-- 操作列，增加上架按钮 -->
+        <!-- 操作列，增加上下架按钮 -->
         <el-table-column label="操作" width="200" align="center">
           <template v-slot="scope">
             <el-button-group>
@@ -69,13 +71,14 @@
                   size="mini"
                   style="margin-right: 5px;"
                   @click="del(scope.row.id)">删除</el-button>
-              <!-- 上架按钮 -->
+              <!-- 上下架按钮 -->
               <el-button
-                  v-if="!scope.row.goods_up"
-                  plain
-                  type="success"
+                  :plain="true"
+                  :type="scope.row.goodsUp === 'true' ? 'danger' : 'success'"
                   size="mini"
-                  @click="handleGoodsUp(scope.row)">上架</el-button>
+                  @click="handleGoodsUp(scope.row)">
+                {{ scope.row.goodsUp === 'true' ? '下架' : '上架' }}
+              </el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -270,52 +273,92 @@ export default {
       }).catch(() => {
       })
     },
+    // 批量上下架操作
     toggleBatchGoodsUp() {
       if (!this.ids.length) {
         this.$message.warning('请选择数据');
         return;
       }
-      this.$confirm('您确定批量切换这些商品的上下架状态吗？', '确认操作', { type: 'warning' }).then(() => {
-        this.$request.put('/goods/toggleUp/batch', { data: this.ids }).then((res) => {
-          if (res.code === '200') {
-            this.$message.success('操作成功');
-            this.load(1);
+
+      // 检查选中商品的状态是否一致
+      const selectedRows = this.tableData.filter(item => this.ids.includes(item.id));
+      const allUp = selectedRows.every(item => item.goodsUp === 'true');
+      const allDown = selectedRows.every(item => item.goodsUp === 'false');
+
+      if (!allUp && !allDown) {
+        this.$message.warning('请选择状态一致的商品进行批量操作');
+        return;
+      }
+
+      // 确定操作类型
+      const action = allUp ? '下架' : '上架';
+      const confirmMessage = `您确定要批量${action}这些商品吗？`;
+
+      this.$confirm(confirmMessage, `确认批量${action}商品`, { type: "warning" }).then(() => {
+        // 发送请求更新商品的状态
+        this.$request.put('/goods/toggleUp/batch', { ids: this.ids, goodsUp: action === '下架' ? 'false' : 'true' }).then(res => {
+          if (res.code === '200') {   // 表示操作成功
+            this.$message.success(`批量${action}成功`);
+            // 更新本地数据状态
+            selectedRows.forEach(item => {
+              item.goodsUp = action === '下架' ? 'false' : 'true';
+            });
+            this.load(this.pageNum); // 重新加载当前页数据
           } else {
-            this.$message.error(res.msg);
+            this.$message.error(res.msg);  // 弹出错误的信息
           }
-        });
+        })
+      }).catch(() => {
+        // 用户取消操作
       });
     },
-    // 上架操作
+    // 上下架操作
     handleGoodsUp(row) {
-      // 更新商品的上下架状态，发送请求到服务器或更新本地数据
-      row.goods_up = true;  // 修改为上架状态
-      this.updateGoodsStatus(row); // 调用接口或更新逻辑
+      // 根据当前状态确定操作类型
+      const action = row.goodsUp === 'true' ? '下架' : '上架';
+      const confirmMessage = `您确定要${action}该商品吗？`;
+
+      this.$confirm(confirmMessage, `确认${action}商品`, { type: "warning" }).then(() => {
+        // 发送请求更新商品的状态
+        this.$request.put('/goods/toggle', { id: row.id, goodsUp: action === '下架' ? 'false' : 'true' }).then(res => {
+          if (res.code === '200') {   // 表示操作成功
+            this.$message.success(`${action}成功`);
+            // 更新本地数据状态
+            row.goodsUp = action === '下架' ? 'false' : 'true';
+          } else {
+            this.$message.error(res.msg);  // 弹出错误的信息
+          }
+        })
+      }).catch(() => {
+        // 用户取消操作
+      });
     },
 
     // 更新商品的上下架状态（示例）
-    updateGoodsStatus(row) {
+    updateGoodsStatus(id) {
       // 发送请求更新商品的状态
-      axios.post('/updateGoodsStatus', { id: row.id, goods_up: row.goods_up })
-          .then(response => {
-            // 更新成功后的处理
-            this.$message.success('商品已上架');
-          })
-          .catch(error => {
-            // 错误处理
-            this.$message.error('上架失败');
-          });
+      this.$confirm('您确定上架该商品吗？', '确认上架商品', {type: "warning"}).then(response => {
+        this.$request.put('/goods/toggle/' + id).then(res => {
+          if (res.code === '200') {   // 表示操作成功
+            this.$message.success('操作成功')
+            this.load(1)
+          } else {
+            this.$message.error(res.msg)  // 弹出错误的信息
+          }
+        })
+      }).catch(() => {
+      })
     },
-    toggleGoodsUp(row) {
-      this.$request.put('/goods/toggleUp', { id: row.id, goods_up: row.goods_up }).then((res) => {
-        if (res.code === '200') {
-          this.$message.success('操作成功');
-          this.load(1);
-        } else {
-          this.$message.error(res.msg);
-        }
-      });
-    },
+    // toggleGoodsUp(row) {
+    //   this.$request.put('/goods/toggleUp', { id: row.id, goods_up: row.goods_up }).then((res) => {
+    //     if (res.code === '200') {
+    //       this.$message.success('操作成功');
+    //       this.load(1);
+    //     } else {
+    //       this.$message.error(res.msg);
+    //     }
+    //   });
+    // },
     load(pageNum) {  // 分页查询
       if (pageNum) this.pageNum = pageNum
       this.$request.get('/goods/selectPage', {

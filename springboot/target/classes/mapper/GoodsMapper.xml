@@ -97,4 +97,10 @@
         where id = #{id} 
     </update>
 
+    <update id="toggleById" parameterType="java.lang.Integer">
+        UPDATE goods
+        SET goods_up = 'true'
+        WHERE id = #{id}
+    </update>
+
 </mapper>
