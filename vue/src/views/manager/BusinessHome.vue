@@ -42,22 +42,22 @@
     </div>
 
     <!-- 下部待处理事务表格 -->
-    <div class="table-container">
-      <el-table
-          ref="mutipleTable"
-          border
-          stripe
-          :data="tableData"
-          :span-method="objectSpanMethod"
-      >
-        <!-- 动态渲染表格列 -->
-        <el-table-column class="table_span" v-for="item in columns" :key="item.prop" :prop="item.prop" :label="item.label" :min-width="item.minWidth">
-          <template slot-scope="scope">
-            <span class="cell_span" :class="{'number-cell': isNumber(scope.row[item.prop])}">{{ scope.row[item.prop] }}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+<!--    <div class="table-container">-->
+<!--      <el-table-->
+<!--          ref="mutipleTable"-->
+<!--          border-->
+<!--          stripe-->
+<!--          :data="tableData"-->
+<!--          :span-method="objectSpanMethod"-->
+<!--      >-->
+<!--        &lt;!&ndash; 动态渲染表格列 &ndash;&gt;-->
+<!--        <el-table-column class="table_span" v-for="item in columns" :key="item.prop" :prop="item.prop" :label="item.label" :min-width="item.minWidth">-->
+<!--          <template slot-scope="scope">-->
+<!--            <span class="cell_span" :class="{'number-cell': isNumber(scope.row[item.prop])}">{{ scope.row[item.prop] }}</span>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--      </el-table>-->
+<!--    </div>-->
 
     <div class="dashboard-container">
       <div class="dashboard-row">
@@ -137,24 +137,31 @@ export default {
         console.error("Failed to fetch product stats:", error);
       }
     },
-
-    async fetchUserStats() {
-      // 模拟一个异步接口请求
-      try {
-        // const response = await fetch("/api/product-stats");
-        // const data = await response.json();
-        const data =  [
-          { label: "今日新增", value: 100 },
-          { label: "昨日新增", value: 400 },
-          { label: "本月新增", value: 50 },
-          { label: "粉丝总数", value: 500 },
-        ];
-        this.cardName2 = "用户总览";
-        this.userStats = data;
-      } catch (error) {
-        console.error("Failed to fetch product stats:", error);
-      }
-
+    fetchUserStats() {
+      console.log("我进来了");
+      this.$request.get("/follow/getPeople").then(res => {
+        if (res.code === '200') {
+          console.log("res", res);  // 添加日志检查返回的数据
+          const values = res.data;
+          if (values && values.a1 !== undefined && values.a2 !== undefined && values.a3 !== undefined && values.a4 !== undefined) {
+            const data = [
+              { label: "今日新增", value: values.a1 },
+              { label: "昨日新增", value: values.a2 },
+              { label: "本月新增", value: values.a3 },
+              { label: "粉丝总数", value: values.a4 },
+            ];
+            this.cardName2 = "用户总览";
+            this.userStats = data;
+          } else {
+            this.$message.error("数据格式不正确");
+          }
+        } else {
+          this.$message.error(res.msg);
+        }
+      }).catch(error => {
+        console.error('请求失败:', error);
+        this.$message.error('请求失败');
+      });
     },
     getDateRanges() {
       const today = new Date();

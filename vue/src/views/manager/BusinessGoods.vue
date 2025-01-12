@@ -1,11 +1,23 @@
 <template>
   <div>
-    <div class="search">
-      <el-input placeholder="请输入商品名称查询" style="width: 200px" v-model="name"></el-input>
-      <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
-      <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
+    <div class="top">
+      <div class="search">
+        <el-input placeholder="请输入商品名称查询" style="width: 200px" v-model="name"></el-input>
+        <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
+        <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
+      </div>
+      <div class="filters">
+        <el-select v-model="status" placeholder="请选择状态" style="width: 150px; margin-right: 10px;">
+          <el-option label="已审核" value="已审核"></el-option>
+          <el-option label="待审核" value="待审核"></el-option>
+        </el-select>
+        <el-select v-model="goodsUp" placeholder="请选择上下架状态" style="width: 150px;">
+          <el-option label="已上架" value="true"></el-option>
+          <el-option label="已下架" value="false"></el-option>
+        </el-select>
+        <el-button type="primary" style="margin-left: 10px" plain @click="choose">筛选</el-button>
+      </div>
     </div>
-
     <div class="operation">
       <el-button type="primary" plain @click="handleAdd">发布商品</el-button>
       <el-button type="danger" plain @click="delBatch">批量删除</el-button>
@@ -161,27 +173,39 @@ export default {
   name: "BusinesssGoods",
   data() {
     return {
+      totalData:[],
       tableData: [],  // 所有的数据
-      pageNum: 1,   // 当前的页码
-      pageSize: 10,  // 每页显示的个数
+      pageNum: 1,     // 当前的页码
+      pageSize: 10,   // 每页显示的个数
       total: 0,
-      name: null,
+      name: null,     // 商品名称搜索条件
+      status: null,   // 状态筛选条件
+      goodsUp: null,  // 上下架状态筛选条件
       fromVisible: false,
       editorVisible: false,
       form: {},
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       rules: {
-        title: [
-          {required: true, name: '请输入商品名称', trigger: 'blur'},
+        name: [
+          { required: true, message: '请输入商品名称', trigger: 'blur' },
         ],
-        content: [
-          {required: true, img: '请输上传商品图主图', trigger: 'blur'},
-        ]
+        price: [
+          { required: true, message: '请输入商品价格', trigger: 'blur' },
+        ],
+        typeId: [
+          { required: true, message: '请选择商品分类', trigger: 'change' },
+        ],
+        unit: [
+          { required: true, message: '请输入计件单位', trigger: 'blur' },
+        ],
+        description: [
+          { required: true, message: '请输入商品介绍', trigger: 'blur' },
+        ],
       },
       ids: [],
       typeData: [],
-      viewData: null
-    }
+      viewData: null,
+    };
   },
   created() {
     this.load(1)
@@ -349,16 +373,6 @@ export default {
       }).catch(() => {
       })
     },
-    // toggleGoodsUp(row) {
-    //   this.$request.put('/goods/toggleUp', { id: row.id, goods_up: row.goods_up }).then((res) => {
-    //     if (res.code === '200') {
-    //       this.$message.success('操作成功');
-    //       this.load(1);
-    //     } else {
-    //       this.$message.error(res.msg);
-    //     }
-    //   });
-    // },
     load(pageNum) {  // 分页查询
       if (pageNum) this.pageNum = pageNum
       this.$request.get('/goods/selectPage', {
@@ -370,12 +384,41 @@ export default {
       }).then(res => {
         console.log(res.data)
         this.tableData = res.data?.list
+        this.totalData = this.tableData
         this.total = res.data?.total
       })
     },
+    choose() {
+      this.applyFilters();  // 应用筛选条件
+    },
+    applyFilters() {
+      let filteredData = this.totalData;
+
+      // 根据状态筛选
+      if (this.status) {
+        filteredData = filteredData.filter(item => item.status === this.status);
+      }
+      // console.log("jjjj" );
+      // console.log(filteredData);
+      // 根据上下架状态筛选
+      if (this.goodsUp !== null) {
+        filteredData = filteredData.filter(item => item.goodsUp === this.goodsUp);
+      }
+      console.log(filteredData);
+      // 更新 tableData
+      this.tableData = filteredData;
+
+      // 更新总条数
+      this.total = filteredData.length;
+
+      // 重置页码
+      this.pageNum = 1;
+    },
     reset() {
-      this.name = null
-      this.load(1)
+      this.name = null;
+      this.status = null;
+      this.goodsUp = null;
+      this.load(1);
     },
     handleCurrentChange(pageNum) {
       this.load(pageNum)
@@ -388,11 +431,19 @@ export default {
 </script>
 
 <style scoped>
-.search {
+.top{
   display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background:#fff ;
   margin-bottom: 15px;
 }
-
+.search {
+  display: flex;
+}
+.filters{
+  margin-top: 10px;
+}
 .operation {
   margin-bottom: 15px;
 }

@@ -30,7 +30,8 @@ const routes = [
       { path: 'goods', name: 'Goods', meta: { name: '商品信息' }, component: () => import('../views/manager/Goods') },
       { path: 'businessGoods', name: 'BusinessGoods', meta: { name: '商品信息' }, component: () => import('../views/manager/BusinessGoods') },
       { path: 'seckill', name: 'Seckill', meta: { name: '秒杀商品管理' }, component: () => import('../views/manager/Seckill') },
-      { path: 'orders', name: 'Orders', meta: { name: '订单管理' }, component: () => import('../views/manager/Orders') },
+      { path: 'businessOrders', name: 'BusinessOrders', meta: { name: '订单管理' }, component: () => import('../views/manager/BusinessOrders') },
+      { path: 'orders', name: 'Orders', meta: { name: '我的订单' }, component: () => import('../views/manager/Orders') },
       { path: 'comment', name: 'Comment', meta: { name: '评论管理' }, component: () => import('../views/manager/Comment') },
     ]
   },

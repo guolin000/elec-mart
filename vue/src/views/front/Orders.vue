@@ -6,6 +6,16 @@
           <div style="margin-left: 20px">我的订单（{{ ordersData.length }} 个）</div>
         </div>
         <div style="margin: 20px 0; padding: 0 50px">
+          <div class="filters">
+            <el-select v-model="orderStatus" placeholder="请选择订单状态" style="width: 150px;">
+              <el-option label="已评价" value="已评价"></el-option>
+              <el-option label="已完成" value="已完成"></el-option>
+              <el-option label="待发货" value="待发货"></el-option>
+              <el-option label="待收货" value="待收货"></el-option>
+            </el-select>
+            <el-button type="primary" style="margin-left: 10px" plain @click="choose">筛选</el-button>
+            <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
+          </div>
           <div class="table">
             <el-table :data="ordersData" strip>
               <el-table-column label="商品图片" width="120px">
@@ -82,13 +92,15 @@ export default {
   data() {
     return {
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
-      ordersData: [],
-      pageNum: 1,   // 当前的页码
-      pageSize: 10,  // 每页显示的个数
+      ordersData: [],  // 当前显示的数据
+      totalData: [],  // 所有数据
+      pageNum: 1,     // 当前的页码
+      pageSize: 10,   // 每页显示的个数
       total: 0,
       form: {},
-      fromVisible: false
-    }
+      fromVisible: false,
+      orderStatus: null,  // 订单状态筛选条件
+    };
   },
   mounted() {
     this.loadOrders(1)
@@ -105,6 +117,8 @@ export default {
       }).then(res => {
         if (res.code === '200') {
           this.ordersData = res.data?.list
+          console.log(this.ordersData)
+          this.totalData = this.ordersData
           this.total = res.data?.total
         } else {
           this.$message.error(res.msg)
@@ -124,6 +138,26 @@ export default {
         }
       })
     },
+    choose() {
+      this.applyFilters();  // 应用筛选条件
+    },
+    applyFilters() {
+      let filteredData = this.totalData;
+
+      // 根据订单状态筛选
+      if (this.orderStatus) {
+        filteredData = filteredData.filter(item => item.status === this.orderStatus);
+      }
+
+      // 更新 ordersData
+      this.ordersData = filteredData;
+
+      // 更新总条数
+      this.total = filteredData.length;
+
+      // 重置页码
+      this.pageNum = 1;
+    },
     handleCurrentChange(pageNum) {
       this.loadOrders(pageNum)
     },
@@ -141,6 +175,10 @@ export default {
     addComment(row) {
       this.fromVisible = true
       this.form = row
+    },
+    reset() {
+      this.orderStatus = null;
+      this.loadOrders(1);
     },
     save() {
       let data = {
