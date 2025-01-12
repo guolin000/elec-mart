@@ -5,7 +5,6 @@
         <img :src="businessData.avatar" alt="" style="height: 60px; width: 60px; border-radius: 50%">
         <div style="width: 220px; margin: 0 30px 0 15px; font-size: 20px; font-weight: bold;">
           <div style="height: 30px; line-height: 30px">{{businessData.name}}</div>
-<!--          <img src="@/assets/imgs/icon.png" alt="" style="height: 25px; margin-top: 5px">-->
         </div>
         <div style="width: 150px; height: 100px; padding: 20px">
           <div style="font-size: 16px; height: 30px; line-height: 30px; color: #7F7F7FFF">店铺电话</div>
@@ -20,6 +19,16 @@
             店铺介绍：{{businessData.description}}
           </div>
         </div>
+        <div style="width: 100px; height: 100px; padding: 20px; display: flex; align-items: center; justify-content: center;">
+          <el-button
+              type="primary"
+              plain
+              @click="follow"
+              :class="isFollowing ? 'followed-button' : 'follow-button'"
+          >
+            {{ isFollowing ? '已关注' : '关注' }}
+          </el-button>
+        </div>
       </div>
       <div style="border-radius: 20px; padding: 0 20px; background-color: white; margin-top: 20px">
         <div style="font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid">本店所有商品（{{goodsData.length}}件）</div>
@@ -33,7 +42,6 @@
           </el-row>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -43,15 +51,17 @@
 export default {
 
   data() {
-    let businessId = this.$route.query.id
+    let businessId = this.$route.query.id;
     return {
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       businessId: businessId,
       goodsData: [],
-      businessData: {}
-    }
+      businessData: {},
+      isFollowing: false,  // 当前用户是否关注了该店铺
+    };
   },
   mounted() {
+    this.loadFollow()
     this.loadBusiness()
     this.loadGoods()
   },
@@ -60,11 +70,11 @@ export default {
     loadBusiness() {
       this.$request.get('/business/selectById/' + this.businessId).then(res => {
         if (res.code === '200') {
-          this.businessData = res.data
+          this.businessData = res.data;
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.msg);
         }
-      })
+      });
     },
     loadGoods() {
       this.$request.get('/goods/selectByBusinessId?id=' + this.businessId).then(res => {
@@ -74,6 +84,52 @@ export default {
           this.$message.error(res.msg)
         }
       })
+    },
+    loadFollow() {
+      console.log('userId:', this.user.id);
+      console.log('businessId:', this.businessId);
+
+      if (this.user.id == null || this.businessId == null) {
+        this.$message.error('用户ID或店铺ID为空');
+        return;
+      }
+
+      this.$request.get('/follow/check', {
+        params: {
+          userId: this.user.id,
+          businessId: this.businessId
+        }
+      }).then(res => {
+        if (res.code === '200') {
+          this.isFollowing = res.data;
+        } else {
+          this.$message.error(res.msg);
+        }
+      }).catch(error => {
+        console.error('请求失败:', error);
+        this.$message.error('请求失败');
+      });
+    },
+
+    follow() {
+      if (this.user.id == null || this.businessId == null) {
+        this.$message.error('用户ID或店铺ID为空');
+        return;
+      }
+      this.$request.post('/follow/toggle', {
+        userId: this.user.id,
+        businessId: this.businessId
+      }).then(res => {
+        if (res.code === '200') {
+          this.isFollowing = !this.isFollowing;  // 更新关注状态
+          this.$message.success(this.isFollowing ? '关注成功' : '取消关注成功');
+        } else {
+          this.$message.error(res.msg);
+        }
+      }).catch(error => {
+        console.error('请求失败:', error);
+        this.$message.error('请求失败');
+      });
     },
     navTo(url) {
       location.href = url
@@ -88,4 +144,16 @@ export default {
   max-width: 20%;
   padding: 10px 10px;
 }
+.follow-button {
+  /* 未关注时的样式 */
+  background-color: #409EFF; /* 蓝色 */
+  color: white;
+}
+
+.followed-button {
+  /* 已关注时的样式 */
+  background-color: #67C23A; /* 绿色 */
+  color: white;
+}
 </style>
+

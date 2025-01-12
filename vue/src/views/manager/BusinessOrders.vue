@@ -14,7 +14,7 @@
           <el-option label="待发货" value="待发货"></el-option>
           <el-option label="待收货" value="待收货"></el-option>
         </el-select>
-        <el-button type="primary" plain @click="choose">筛选</el-button>
+        <el-button type="primary" style="margin-left: 10px" plain @click="choose">筛选</el-button>
       </div>
     </div>
 
@@ -73,7 +73,7 @@
 
 <script>
 export default {
-  name: "Orders",
+  name: "BusinessOrders",
   data() {
     return {
       tableData: [],  // 当前显示的数据
