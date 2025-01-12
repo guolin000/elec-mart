@@ -13,7 +13,7 @@ public class UserCF {
 
     /**
      * 方法描述: 推荐商品id列表
-     *
+     * 基于用户的协同过滤推荐算法
      * @param userId 当前用户
      * @param list   用户商品评分数据
      * @return {@link List<Integer>}
@@ -36,7 +36,7 @@ public class UserCF {
         }
         // 最近邻用户看过商品列表
         List<Integer> neighborItems = userMap.get(nearestUserId).stream().map(RelateDTO::getGoodsId).collect(Collectors.toList());
-        // 指定用户看过商品列表
+        // 当前用户看过商品列表
         List<Integer> userItems = userMap.get(userId).stream().map(RelateDTO::getGoodsId).collect(Collectors.toList());
         // 找到最近邻看过，但是该用户没看过的商品
         neighborItems.removeAll(userItems);
