@@ -2,7 +2,16 @@
   <div class="main-content">
     <div style="display: flex; width: 70%; background-color: white; margin: 30px auto; border-radius: 20px">
       <div style="flex: 1; padding: 0 20px">
-        <div style="font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid">{{typeData.name}}</div>
+        <div style="font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid">
+          <div
+              v-for="secondType in secondTypes"
+              :key="secondType.id"
+              @click="selectSecondType(secondType.id)"
+              :class="['second-type-item', { 'active': secondType.id === selectedSecondTypeId }]"
+          >
+            {{ secondType.name }}
+          </div>
+        </div>
         <div style="margin: 20px 0">
           <el-row :gutter="20">
             <el-col :span="6" style="margin-bottom: 20px" v-for="item in goodsData">
@@ -38,7 +47,9 @@ export default {
       typeId: typeId,
       goodsData: [],
       recommendData: [],
-      typeData: {}
+      typeData: {},
+      secondTypes:[],// 存储二级分类列表
+      selectedSecondTypeId: null // 当前选中的二级分类ID
     }
   },
   mounted() {
@@ -58,16 +69,20 @@ export default {
       })
     },
     loadType() {
-      this.$request.get('/type/selectById/' + this.typeId).then(res => {
+      this.$request.get('/secondType/selectByTypeId/' + this.typeId).then(res => {
         if (res.code === '200') {
-          this.typeData = res.data
+          this.secondTypes = res.data
+          if (this.secondTypes.length > 0) {
+            this.selectedSecondTypeId = this.secondTypes[0].id // 默认选择第一个二级分类
+            this.loadGoods(this.selectedSecondTypeId) // 加载选中二级分类的商品
+          }
         } else {
           this.$message.error(res.msg)
         }
       })
     },
-    loadGoods() {
-      this.$request.get('/goods/selectByTypeId?id=' + this.typeId).then(res => {
+    loadGoods(secondTypeId = this.selectedSecondTypeId) {
+      this.$request.get('/goods/selectByTypeId?id=' + secondTypeId).then(res => {
         if (res.code === '200') {
           this.goodsData = res.data
         } else {
@@ -75,6 +90,12 @@ export default {
         }
       })
     },
+    // 点击选择某个二级分类时，更新商品列表
+    selectSecondType(secondTypeId) {
+      this.selectedSecondTypeId = secondTypeId
+      this.loadGoods(secondTypeId) // 加载选中二级分类的商品
+    },
+
     navTo(url) {
       location.href = url
     }

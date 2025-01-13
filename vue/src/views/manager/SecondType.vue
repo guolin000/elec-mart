@@ -7,7 +7,6 @@
     </div>
 
     <div class="operation">
-      <el-button type="primary" plain @click="handleAdd">新增</el-button>
       <el-button type="danger" plain @click="delBatch">批量删除</el-button>
     </div>
 
@@ -25,6 +24,7 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="typeId" label="父类" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template v-slot="scope">
             <el-button plain type="primary" @click="handleEdit(scope.row)" size="mini">编辑</el-button>
@@ -105,10 +105,6 @@ export default {
     this.load(1)
   },
   methods: {
-    handleAdd() {   // 新增数据
-      this.form = {}  // 新增数据的时候清空数据
-      this.fromVisible = true   // 打开弹窗
-    },
     handleEdit(row) {   // 编辑数据
       this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
       this.fromVisible = true   // 打开弹窗
@@ -117,7 +113,7 @@ export default {
       this.$refs.formRef.validate((valid) => {
         if (valid) {
           this.$request({
-            url: this.form.id ? '/type/update' : '/type/add',
+            url: this.form.id ? '/secondType/update' : '/secondType/add',
             method: this.form.id ? 'PUT' : 'POST',
             data: this.form
           }).then(res => {
@@ -134,7 +130,7 @@ export default {
     },
     del(id) {   // 单个删除
       this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
-        this.$request.delete('/type/delete/' + id).then(res => {
+        this.$request.delete('/secondType/delete/' + id).then(res => {
           if (res.code === '200') {   // 表示操作成功
             this.$message.success('操作成功')
             this.load(1)
@@ -154,7 +150,7 @@ export default {
         return
       }
       this.$confirm('您确定批量删除这些数据吗？', '确认删除', {type: "warning"}).then(response => {
-        this.$request.delete('/type/delete/batch', {data: this.ids}).then(res => {
+        this.$request.delete('/secondType/delete/batch', {data: this.ids}).then(res => {
           if (res.code === '200') {   // 表示操作成功
             this.$message.success('操作成功')
             this.load(1)
