@@ -30,7 +30,7 @@
         <el-col :span="8">
           <el-card class="small-card">
             <div class="card-content">
-              <i class="el-icon-money icon-large"></i> <!-- 增大图标 -->
+              <i class="el-icon-shopping-bag-1 icon-large"></i> <!-- 增大图标 -->
               <div class="content-right">
                 <div class="label">昨日销售总额</div> <!-- 标签信息 -->
                 <div class="value"> ¥ {{ salesAmountOld }}</div> <!-- 数值 -->
