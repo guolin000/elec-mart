@@ -30,18 +30,16 @@ public class SeckillService {
     public String seckill(Long seckillId, Integer userId) {
         // 获取当前时间
         LocalDateTime currentTime = LocalDateTime.now();
-
+        System.out.println("测试："+currentTime);
         // 获取秒杀商品
         SeckillGoods seckill = seckillMapper.getSeckillBySeckillId(seckillId);
         if (seckill == null) {
             return "商品不存在";
         }
-
         // 校验秒杀状态：只有商品上架且在秒杀时间内才能进行秒杀
         if (seckill.getSeckillStatus() == false) {
             return "商品未上架，无法秒杀";
         }
-
         // 校验秒杀时间是否有效
         if (currentTime.isBefore(seckill.getSeckillBegin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime())) {
             return "秒杀尚未开始";
@@ -76,7 +74,7 @@ public class SeckillService {
             // 这里可以根据需要生成订单逻辑
             // ...
 
-            return "秒杀成功";
+            return "200";
         } finally {
             // 释放锁
             redisTemplate.delete(lockKey);

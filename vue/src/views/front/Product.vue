@@ -15,7 +15,7 @@
             <el-button
                 type="primary"
                 style="margin-top: 10px; width: 100%; background-color: #FF5000; border-color: #FF5000;"
-                @click="navTo('/seckill/seckill_p')">
+                @click="addCart">
               立即秒杀
             </el-button>
           </el-col>
@@ -68,6 +68,17 @@ export default {
     },
     handleClick(tab, event) {
       this.activeName = tab.name
+    },
+    addCart() {
+      let data = {seckillId: this.seckillId, userId: this.user.id}
+      console.log(data)
+      this.$request.post('/seckill/seckill_p?seckillId=' + data.seckillId + '&userId=' + data.userId).then(res => {
+        if (res.code === '200') {
+          this.$message.success(res.data)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     navTo(url) {
       location.href = url
