@@ -44,6 +44,7 @@ public class SeckillService {
         if (currentTime.isBefore(seckill.getSeckillBegin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime())) {
             return "秒杀尚未开始";
         }
+
         if (currentTime.isAfter(seckill.getSeckillEnd().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime())) {
             return "秒杀已结束";
         }
@@ -59,6 +60,7 @@ public class SeckillService {
             // 获取缓存中的库存（使用seckillNum字段作为库存）
             ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
             Integer stock = (Integer) valueOperations.get(PRODUCT_PREFIX + seckillId + ":seckillNum");
+            System.out.println("测试："+stock);
             if (stock == null || stock <= 0) {
                 return "库存不足";
             }
