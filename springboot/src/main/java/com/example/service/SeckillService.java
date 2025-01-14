@@ -4,11 +4,15 @@ import com.example.entity.Seckill;
 import com.example.entity.SeckillGoods;
 import com.example.mapper.SeckillMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,26 +29,57 @@ public class SeckillService {
     private final String PRODUCT_PREFIX = "seckill:product:";  // Redis key 前缀
     private final String LOCK_PREFIX = "seckill:lock:";        // 锁的前缀
 
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+
+        // 设置 key 和 value 的序列化器
+        template.setKeySerializer(new StringRedisSerializer());  // key 使用 StringRedisSerializer
+        template.setValueSerializer(new GenericToStringSerializer<>(Object.class));  // value 使用 GenericToStringSerializer
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    // 秒杀商品初始化库存的方法
+    @PostConstruct
+    public void initSeckillStock() {
+        // 获取所有秒杀商品
+        List<Seckill> seckillList = seckillMapper.getAllSeckillItems();
+
+        // 遍历所有商品，并将库存初始化到 Redis
+        for (Seckill seckill : seckillList) {
+            // 获取每个商品的秒杀商品信息
+            SeckillGoods seckillGoods = seckillMapper.getSeckillBySeckillId(seckill.getSeckillId());
+
+            if (seckillGoods != null && seckillGoods.getSeckillNum() != null) {
+                // 将商品库存放入 Redis
+                String redisKey = PRODUCT_PREFIX + seckill.getSeckillId() + ":seckillNum";
+                redisTemplate.opsForValue().set(redisKey, seckillGoods.getSeckillNum());
+                System.out.println("初始化秒杀商品 " + seckill.getSeckillId() + " 库存为 " + seckillGoods.getSeckillNum());
+            }
+        }
+    }
+
     // 秒杀业务逻辑
-    @Transactional
     public String seckill(Long seckillId, Integer userId) {
         // 获取当前时间
         LocalDateTime currentTime = LocalDateTime.now();
-        System.out.println("测试："+currentTime);
+        System.out.println("测试：" + currentTime);
         // 获取秒杀商品
         SeckillGoods seckill = seckillMapper.getSeckillBySeckillId(seckillId);
         if (seckill == null) {
             return "商品不存在";
         }
         // 校验秒杀状态：只有商品上架且在秒杀时间内才能进行秒杀
-        if (seckill.getSeckillStatus() == false) {
+        if (!seckill.getSeckillStatus()) {
             return "商品未上架，无法秒杀";
         }
         // 校验秒杀时间是否有效
         if (currentTime.isBefore(seckill.getSeckillBegin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime())) {
             return "秒杀尚未开始";
         }
-
         if (currentTime.isAfter(seckill.getSeckillEnd().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime())) {
             return "秒杀已结束";
         }
@@ -59,14 +94,31 @@ public class SeckillService {
         try {
             // 获取缓存中的库存（使用seckillNum字段作为库存）
             ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-            Integer stock = (Integer) valueOperations.get(PRODUCT_PREFIX + seckillId + ":seckillNum");
-            System.out.println("测试："+stock);
+
+            String stockString = (String) valueOperations.get(PRODUCT_PREFIX + seckillId + ":seckillNum");
+
+            // 将 stockString 转换为 Integer
+            Integer stock = (stockString != null) ? Integer.valueOf(stockString) : 0;
+
             if (stock == null || stock <= 0) {
                 return "库存不足";
             }
 
-            // 扣减库存
+            // 使用 decrement 扣减库存，这样 Redis 会直接操作整数值
             redisTemplate.opsForValue().decrement(PRODUCT_PREFIX + seckillId + ":seckillNum", 1);
+
+            //Integer stock = (Integer) valueOperations.get(PRODUCT_PREFIX + seckillId + ":seckillNum");
+            //System.out.println("测试：" + stock);
+
+            //if (stock == null || stock <= 0) {
+                //return "库存不足";
+            //}
+            // 扣减库存
+            //String redisKey = PRODUCT_PREFIX + seckill.getSeckillId() + ":seckillNum";
+            //redisTemplate.opsForValue().set(redisKey, stock-1);
+            // 扣减库存（原子操作）
+            //redisTemplate.opsForValue().decrement(redisKey, 1);
+            //redisTemplate.opsForValue().decrement(PRODUCT_PREFIX + seckillId + ":seckillNum", 1);
 
             // 更新数据库库存
             int newStock = stock - 1;
@@ -76,12 +128,13 @@ public class SeckillService {
             // 这里可以根据需要生成订单逻辑
             // ...
 
-            return "200";
+            return "秒杀成功";
         } finally {
             // 释放锁
             redisTemplate.delete(lockKey);
         }
     }
+
     // 获取所有秒杀商品
     public List<Seckill> getAllSeckillProducts() {
         return seckillMapper.getAllSeckillItems();
