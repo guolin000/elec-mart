@@ -25,6 +25,7 @@ public class SecondTypeService {
      */
     public void add(SecondType secondType) {
         secondTypeMapper.insert(secondType);
+        System.out.println(secondType);
     }
 
     /**
@@ -62,6 +63,10 @@ public class SecondTypeService {
      */
     public List<SecondType> selectAll(SecondType secondType) {
         return secondTypeMapper.selectAll(secondType);
+    }
+
+    public List<SecondType> selectByTypeId(Integer typeId) {
+        return secondTypeMapper.selectByTypeId(typeId);
     }
 
     /**

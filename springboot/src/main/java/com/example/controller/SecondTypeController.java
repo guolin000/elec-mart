@@ -26,6 +26,7 @@ public class SecondTypeController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody SecondType secondType) {
+        System.out.println("dawdawdawdawda"+secondType.getTypeId());
         secondTypeService.add(secondType);
         return Result.success();
     }
@@ -72,6 +73,15 @@ public class SecondTypeController {
     @GetMapping("/selectAll")
     public Result selectAll(SecondType secondType ) {
         List<SecondType> list = secondTypeService.selectAll(secondType);
+        return Result.success(list);
+    }
+
+    /**
+     * 根据一级分类查询
+     */
+    @GetMapping("/selectByTypeId/{typeId}")
+    public Result selectByTypeId(@PathVariable Integer typeId) {
+        List<SecondType> list = secondTypeService.selectByTypeId(typeId);
         return Result.success(list);
     }
 

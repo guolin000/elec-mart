@@ -48,14 +48,14 @@
                 <if test="name != null">name,</if>
                 <if test="description != null">description,</if>
                 <if test="img != null">img,</if>
-                <if test="type_id != null">type_id,</if>
+                <if test="typeId != null">type_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id},</if>
                 <if test="name != null">#{name},</if>
                 <if test="description != null">#{description},</if>
                 <if test="img != null">#{img},</if>
-                <if test="typeId != null">type_id,</if>
+                <if test="typeId != null">#{typeId},</if>
         </trim>
     </insert>
 

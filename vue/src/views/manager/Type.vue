@@ -25,9 +25,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="230" align="center">
           <template v-slot="scope">
             <el-button plain type="primary" @click="handleEdit(scope.row)" size="mini">编辑</el-button>
+            <el-button plain type="success" @click="addSecondType(scope.row.id)" size="mini">添加子类</el-button>
             <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
           </template>
         </el-table-column>
@@ -73,6 +74,35 @@
       </div>
     </el-dialog>
 
+    <!-- 二级分类添加框 -->
+    <el-dialog title="信息" :visible.sync="secondTypeFormVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
+      <el-form label-width="100px" style="padding-right: 50px" :model="form" :rules="rules" ref="formRef">
+        <el-form-item prop="name" label="一级分类序号">
+          <el-input v-model="secondTypeForm.typeId" autocomplete="off" readonly></el-input>
+        </el-form-item>
+        <el-form-item prop="name" label="分类名称">
+          <el-input v-model="secondTypeForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="description" label="分类描述">
+          <el-input v-model="secondTypeForm.description" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="分类图标">
+          <el-upload
+              class="avatar-uploader"
+              :action="$baseUrl + '/files/upload'"
+              :headers="{ token: user.token }"
+              list-type="picture"
+              :on-success="handleAvatarSuccess"
+          >
+            <el-button type="primary">上传图标</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="secondTypeFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveSecondType">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -88,7 +118,9 @@ export default {
       total: 0,
       name: null,
       fromVisible: false,
+      secondTypeFormVisible: false,
       form: {},
+      secondTypeForm: {},
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       rules: {
         title: [
@@ -109,6 +141,12 @@ export default {
       this.form = {}  // 新增数据的时候清空数据
       this.fromVisible = true   // 打开弹窗
     },
+    // 新增子类，打开子类表单弹窗
+    addSecondType(id) {   // 新增数据
+      this.secondTypeForm = {}  // 新增数据的时候清空数据
+      this.secondTypeForm.typeId = id
+      this.secondTypeFormVisible = true   // 打开弹窗
+    },
     handleEdit(row) {   // 编辑数据
       this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
       this.fromVisible = true   // 打开弹窗
@@ -125,6 +163,25 @@ export default {
               this.$message.success('保存成功')
               this.load(1)
               this.fromVisible = false
+            } else {
+              this.$message.error(res.msg)  // 弹出错误的信息
+            }
+          })
+        }
+      })
+    },
+    saveSecondType() {   // 保存按钮触发的逻辑  它会触发新增或者更新
+      this.$refs.formRef.validate((valid) => {
+        if (valid) {
+          this.$request({
+            url: '/secondType/add',
+            method: 'POST',
+            data: this.secondTypeForm
+          }).then(res => {
+            if (res.code === '200') {  // 表示成功保存
+              this.$message.success('保存成功')
+              this.load(1)
+              this.secondTypeFormVisible = false
             } else {
               this.$message.error(res.msg)  // 弹出错误的信息
             }
