@@ -94,7 +94,7 @@
               :animation-data="animationData2"
               :loop="true"
               :autoplay="true"
-              style="width: 150px; height: 150px;margin-left: 8px;"
+              style="width: 55px; height: 55px;margin-left: 8px;"
           ></lottie-animation>
           <div class="section-title">热卖商品</div>
         </div>
@@ -113,7 +113,7 @@
               :animation-data="animationData"
               :loop="true"
               :autoplay="true"
-              style="width: 150px; height: 150px;margin-top: 10px;margin-left: 8px"
+              style="width: 60px; height: 60px;margin-top: 10px;margin-left: 8px"
           ></lottie-animation>
           <div class="section-title">猜你喜欢</div>
         </div>
@@ -254,7 +254,7 @@ export default {
   display: flex;
   align-items: center; /* 垂直居中 */
   /*justify-content: ; !* 水平间距 *!*/
-  margin: 40px 0 0 15px; /* 上外边距 */
+  margin: 15px 0 0 15px; /* 上外边距 */
 }
 
 .section-title {

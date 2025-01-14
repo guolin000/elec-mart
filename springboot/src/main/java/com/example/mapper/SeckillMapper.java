@@ -29,5 +29,4 @@ public interface SeckillMapper {
     @Select("SELECT * FROM seckill WHERE seckill_status = #{seckillStatus}")
     List<Seckill> getSeckillByStatus(Boolean seckillStatus);
 
-    // 你可以根据需要添加更多自定义查询方法
 }
