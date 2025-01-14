@@ -46,7 +46,7 @@
                   <el-input-number v-model="scope.row.num" style="width: 100px" @change="handleChange(scope.row)" :min="1"></el-input-number>
                 </template>
               </el-table-column>
-              <el-table-column prop="goodsPrice" label="原价"></el-table-column>
+              <el-table-column prop="goodsPrice" label="小计"></el-table-column>
             </el-table>
 
           </div>
@@ -57,7 +57,7 @@
             <span style="padding-right: 30px">付款方式 : </span>
                 <el-radio-group v-model="selectedValue" style="transform: scale(1.2); font-size: 20px;">
                       <el-radio label="option1" >支付宝</el-radio>
-                      <el-radio label="option2">余额</el-radio>
+<!--                      <el-radio label="option2">余额</el-radio>-->
                     </el-radio-group>
             </div>
 
@@ -71,6 +71,8 @@
 </template>
 
 <script>
+
+import axios from "axios";
 
 export default {
 
@@ -86,7 +88,8 @@ export default {
       addressData: [],
       selectedData: [],
       selectedValue: 'option1',  // 默认选中的值
-      goodsId:null
+      goodsId:null,
+      orderNo: ''
     }
   },
   mounted() {
@@ -111,15 +114,15 @@ export default {
                 // console.log(this.goodsId)
                 this.$request.get('/cart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
                       if (res.code === '200') {
-                        console.table(res.data)
+                        // console.table(res.data)
                         this.goodsData = res.data
-                        console.table(this.goodsData)
+                        // console.table(this.goodsData)
                         //计算总价
                         this.totalPrice = 0
                         this.goodsData.forEach(item => {
-                          console.log("111")
-                          console.log( item.goodsPrice)
-                          this.totalPrice += item.goodsPrice * item.num
+                          // console.log("111")
+                          // console.log( item.num)
+                          this.totalPrice = item.goodsPrice * item.num
                         })
                       } else {
                          this.$message.error(res.msg)
@@ -187,11 +190,33 @@ export default {
     },
     handleChange(row) {
       this.totalPrice = 0
-      this.selectedData.forEach(item => {
+      this.goodsData.forEach(item => {
         this.totalPrice += item.goodsPrice * item.num
       })
     },
-    pay() {
+
+    createIframe(formHtml) {
+      // 创建一个隐藏的 iframe 元素
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';  // 设置为隐藏
+      document.body.appendChild(iframe);
+
+      // 将支付宝返回的表单 HTML 插入到 iframe 中
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      iframeDoc.open();
+      iframeDoc.write(formHtml);
+      iframeDoc.close();
+
+      // 触发表单提交
+      const form = iframeDoc.querySelector('form');
+      if (form) {
+        form.submit();  // 提交表单
+      } else {
+        console.error('表单没有正确插入到 iframe 中');
+      }
+    },
+
+    async pay() {
       if (!this.addressId) {
         this.$message.warning('请选择收货地址')
         return
@@ -200,17 +225,23 @@ export default {
         userId: this.user.id,
         addressId: this.addressId,
         status: '待发货',
-        cartData: this.goodsData
+        cartData: this.goodsData,
+        price: this.totalPrice
       }
       this.$request.post('/orders/add', data).then(res => {
-        if (res.code === '200') {
+        if (res.data !== null) {
+          console.log("res.data:"+res.data)
           this.$message.success('操作成功')
-
+          this.orderNo=res.data
+          console.log("orderNo:"+this.orderNo);
+          window.open('http://localhost:9090/alipay/pay?orderNo=' + this.orderNo)
         } else {
           this.$message.error(res.msg)
         }
       })
-     location.href = "/front/orders"
+
+
+      // location.href = "/front/orders"
 
     }
   }

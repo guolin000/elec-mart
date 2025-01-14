@@ -11,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,7 +71,14 @@ public class CartService {
      * 根据商品ID查询
      */
     public List<Cart> selectByGoodsId(Integer goodsId) {
-        return (List<Cart>) cartMapper.selectByGoodsId(goodsId);
+        Account currentUser = TokenUtils.getCurrentUser();
+        List<Cart> goodsList=cartMapper.selectByGoodsId(goodsId);
+        for (int i=goodsList.size()-1; i >= 0; i--){
+            if (goodsList.get(i).getUserId()!=currentUser.getId()){
+                goodsList.remove(i);
+            }
+        }
+        return goodsList;
     }
 
 

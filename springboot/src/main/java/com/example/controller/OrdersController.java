@@ -25,8 +25,8 @@ public class OrdersController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody Orders orders) {
-        ordersService.add(orders);
-        return Result.success();
+        String orderNo= ordersService.add(orders);
+        return Result.success(orderNo);
     }
 
     /**
