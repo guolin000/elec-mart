@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 分类信息表前端操作接口
@@ -132,4 +133,14 @@ public class GoodsController {
         return Result.success(page);
     }
 
+    /**
+     * 获取商品信息
+     */
+    @GetMapping("/getGoods")
+    public Result getGoods(@RequestParam Integer Id){
+        System.out.println("businessId" + Id);
+        Map<String, Long> stats = goodsService.getGoodStats(Id);
+//        System.out.println(stats);
+        return Result.success(stats);
+    }
 }

@@ -65,4 +65,16 @@ public interface GoodsMapper {
             "</foreach>" +
             "</script>")
     int updateGoodsUpByIds(@Param("ids") List<Integer> ids, @Param("goodsUp") String goodsUp);
+
+    @Select("select COUNT(*) from goods where business_id = #{id} and goods_up = 'true'")
+    Long countUpGoods(@Param("id") Integer id);
+
+    @Select("select COUNT(*) from goods where business_id = #{id} and goods_up = 'false'")
+    Long countDownGoods(@Param("id") Integer id);
+
+    @Select("select COUNT(*) from goods where business_id = #{id} and count < 10")
+    Long countNeverseGoods(@Param("id") Integer id);
+
+    @Select("SELECT COUNT(*) FROM goods WHERE business_id = #{id}")
+    Long count(@Param("id") Integer id);
 }
