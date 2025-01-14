@@ -18,15 +18,15 @@ public interface FollowMapper {
     void unfollow(@Param("userId") Integer userId, @Param("businessId") Integer businessId);
 
 
-    @Select("SELECT COUNT(*) FROM Follow WHERE DATE(created_at) = CURDATE()")
-    Long countTodayFollows();
+    @Select("SELECT COUNT(*) FROM Follow WHERE business_id = #{businessId} and DATE(created_at) = CURDATE()")
+    Long countTodayFollows(@Param("businessId") Integer businessId);
 
-    @Select("SELECT COUNT(*) FROM Follow WHERE DATE(created_at) = CURDATE() - INTERVAL 1 DAY")
-    Long countYesterdayFollows();
+    @Select("SELECT COUNT(*) FROM Follow WHERE business_id = #{businessId} and DATE(created_at) = CURDATE() - INTERVAL 1 DAY")
+    Long countYesterdayFollows(@Param("businessId") Integer businessId);
 
-    @Select("SELECT COUNT(*) FROM Follow WHERE MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())")
-    Long countMonthlyFollows();
+    @Select("SELECT COUNT(*) FROM Follow WHERE business_id = #{businessId} and MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())")
+    Long countMonthlyFollows(@Param("businessId") Integer businessId);
 
-    @Select("SELECT COUNT(*) FROM Follow")
-    Long count();
+    @Select("SELECT COUNT(*) FROM Follow WHERE business_id = #{businessId}")
+    Long count(@Param("businessId") Integer businessId);
 }

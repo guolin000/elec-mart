@@ -235,4 +235,13 @@ public class GoodsService {
         }
         return list;
     }
+
+    public Map<String, Long> getGoodStats(int id) {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("a1", goodsMapper.countUpGoods(id));  // 已上架
+        stats.put("a2", goodsMapper.countDownGoods(id));  // 已下架
+        stats.put("a3", goodsMapper.countNeverseGoods(id));  // 库存紧张
+        stats.put("a4", goodsMapper.count(id));  // 全部商品
+        return stats;
+    }
 }

@@ -33,8 +33,8 @@ public class FollowController {
     }
 
     @GetMapping("/getPeople")
-    public Result getPeople() {
-        Map<String, Long> stats = followService.getPeopleStats();
+    public Result getPeople(@RequestParam("businessId") Integer businessId) {
+        Map<String, Long> stats = followService.getPeopleStats(businessId);
         System.out.println(stats);
         return Result.success(stats);
     }
