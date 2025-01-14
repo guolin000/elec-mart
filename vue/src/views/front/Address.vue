@@ -3,7 +3,15 @@
     <div style="width: 70%; background-color: white; margin: 30px auto; border-radius: 20px">
       <div style="padding-bottom: 10px">
         <div style="display: flex; font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid;">
-          <div style="flex: 3; margin-left: 20px">我的地址</div>
+          <div class="section-container" style="flex: 3; margin-left: 20px" >
+            <lottie-animation
+                :animation-data="animationData"
+                :loop="true"
+                :autoplay="true"
+                style="width:50px; height:50px;"
+            ></lottie-animation>
+            <div >我的地址</div>
+          </div>
           <div style="flex: 1; text-align: right; padding-right: 20px">
             <el-button type="warning" round @click="addAddress">添加收货地址</el-button>
           </div>
@@ -59,6 +67,10 @@
 
 <script>
 
+import * as animationData from "@/assets/定位.json";
+import LottieAnimation from "@/components/LottieAnimation";
+import Lottie from "lottie-web";
+
 export default {
 
   data() {
@@ -81,11 +93,25 @@ export default {
           {required: true, message: '请输入联系电话', trigger: 'blur'},
         ],
       },
+      animationData,
     }
   },
-  mounted() {
-    this.loadAddress(1)
-  },
+components: {
+  LottieAnimation,
+},
+mounted() {
+  this.$nextTick(() => {
+    // 初始化 Lottie 动画
+    const lottieInstance = Lottie.loadAnimation({
+      container: this.$refs.lottieContainer,
+      renderer: 'svg',
+      loop: this.lottieOptions.loop,
+      autoplay: this.lottieOptions.autoplay,
+      animationData: this.lottieOptions.animationData,
+    });
+  });
+  this.loadCollect(1)
+},
   // methods：本页面所有的点击事件或者其他函数定义区
   methods: {
     addAddress() {
@@ -151,3 +177,23 @@ export default {
   }
 }
 </script>
+<style scoped>
+.section-container {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  /*justify-content:space-between ; !* 水平间距 *!*/
+  /*margin: 40px 0 0 15px; !* 上外边距 *!*/
+}
+
+.section-title {
+  height: 40px;
+  background-color: #04BF04FF;
+  font-size: 20px;
+  color: white;
+  width: 130px;
+  font-weight: bold;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
+}
+</style>

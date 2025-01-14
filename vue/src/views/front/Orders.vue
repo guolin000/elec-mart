@@ -2,8 +2,22 @@
   <div class="main-content">
     <div style="width: 80%; background-color: white; margin: 30px auto; border-radius: 20px">
       <div style="padding-bottom: 10px">
-        <div style="font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid;">
-          <div style="margin-left: 20px">我的订单（{{ ordersData.length }} 个）</div>
+        <div class="section-container" style="font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid;">
+          <div style=" display: flex; align-items: center; /* 垂直居中 */">
+            <lottie-animation
+                :animation-data="animationData2"
+                :loop="true"
+                :autoplay="true"
+                style="width:50px; height:50px;"
+            ></lottie-animation>
+            <div>我的订单（{{ ordersData.length }} 个）</div>
+          </div>
+          <lottie-animation
+              :animation-data="animationData"
+              :loop="true"
+              :autoplay="true"
+              style="width:100px; height:100px;"
+          ></lottie-animation>
         </div>
         <div style="margin: 20px 0; padding: 0 50px">
           <div class="filters">
@@ -87,6 +101,11 @@
 
 <script>
 
+import * as animationData from "@/assets/回信.json";
+import * as animationData2 from "@/assets/标签.json";
+import LottieAnimation from "@/components/LottieAnimation";
+import Lottie from "lottie-web";
+
 export default {
 
   data() {
@@ -100,9 +119,24 @@ export default {
       form: {},
       fromVisible: false,
       orderStatus: null,  // 订单状态筛选条件
-    };
+      animationData,
+      animationData2,
+    }
+  },
+  components: {
+    LottieAnimation,
   },
   mounted() {
+    this.$nextTick(() => {
+      // 初始化 Lottie 动画
+      const lottieInstance = Lottie.loadAnimation({
+        container: this.$refs.lottieContainer,
+        renderer: 'svg',
+        loop: this.lottieOptions.loop,
+        autoplay: this.lottieOptions.autoplay,
+        animationData: this.lottieOptions.animationData,
+      });
+    });
     this.loadOrders(1)
   },
   // methods：本页面所有的点击事件或者其他函数定义区
@@ -201,3 +235,23 @@ export default {
   }
 }
 </script>
+<style scoped>
+.section-container {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content:space-between ; /* 水平间距 */
+  margin: 20px 0 0 15px; /* 上外边距 */
+}
+
+.section-title {
+  height: 40px;
+  background-color: #04BF04FF;
+  font-size: 20px;
+  color: white;
+  width: 130px;
+  font-weight: bold;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
+}
+</style>

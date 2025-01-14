@@ -4,8 +4,16 @@
     <div style="display: flex">
       <div class="left"></div>
       <div style="width: 85%; background-color: white; margin-bottom: 50px;border-radius: 20px">
-        <div style="color: #FE0137FF; margin: 15px 0 15px 18px; font-weight: bold; font-size: 16px">主题市场</div>
-        <div style="display: flex; margin: 0 25px; height: 550px">
+        <div class="section-container">
+          <lottie-animation
+              :animation-data="animationData3"
+              :loop="true"
+              :autoplay="true"
+              style="width: 45px; height: 40px;"
+          ></lottie-animation>
+          <div style="color: #FE0137FF; margin: 15px 0 15px 0px; font-weight: bold; font-size: 16px">主题市场</div>
+        </div>
+        <div style="display: flex; margin: 0 25px; height: 550px;background: #f5f7fa;">
           <div style="flex: 2">
             <div style="display: flex; color: #666666FF; margin: 14px 0" v-for="item in typeData">
               <img :src="item.img" alt="" style="height: 20px; width: 20px">
@@ -90,7 +98,7 @@
           ></lottie-animation>
           <div class="section-title">热卖商品</div>
         </div>
-        <div style="margin: 10px 5px 0 5px">
+        <div style="margin: 10px 5px 0 5px;background: #f5f7fa;">
           <el-row>
             <el-col :span="5" v-for="item in goodsData">
               <img @click="navTo('/front/detail?id=' + item.id)" :src="item.img" alt="" style="width: 100%; height: 175px; border-radius: 10px; border: #cccccc 1px solid">
@@ -109,7 +117,7 @@
           ></lottie-animation>
           <div class="section-title">猜你喜欢</div>
         </div>
-        <div style="margin: 10px 5px 0 5px">
+        <div style="margin: 10px 5px 40px 5px;background: #f5f7fa;">
           <el-row>
             <el-col :span="5" v-for="item in recommendData">
               <img @click="navTo('/front/detail?id=' + item.id)" :src="item.img" alt="" style="width: 100%; height: 175px; border-radius: 10px; border: #cccccc 1px solid">
@@ -127,7 +135,7 @@
 <script>
 import * as animationData from '../../assets/推荐.json';
 import * as animationData2 from '../../assets/热销.json';
-import * as animationData3 from '../../assets/38.json';
+import * as animationData3 from '../../assets/首页.json';
 import LottieAnimation from '../../components/LottieAnimation';
 import Lottie from "lottie-web";
 export default {

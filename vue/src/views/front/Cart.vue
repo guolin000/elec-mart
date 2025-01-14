@@ -3,11 +3,15 @@
     <div style="width: 70%; background-color: white; margin: 30px auto; border-radius: 20px">
       <div style="padding-bottom: 10px">
         <div style="display: flex; font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid;">
-          <div style="margin-left: 20px; flex: 1">全部商品（{{ goodsData.length }}件）</div>
-
-<!--            <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">-->
-<!--                   <el-button type="danger" style=" font-size: 18px;" round @click="dayin">test</el-button>-->
-<!--            </div>-->
+          <div class="section-container" style="flex:1;">
+            <lottie-animation
+                :animation-data="animationData"
+                :loop="true"
+                :autoplay="true"
+                style="width:50px; height:50px;"
+            ></lottie-animation>
+            <div>全部商品（{{ goodsData.length }}件）</div>
+          </div>
 
           <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">
             已选商品 ￥ {{totalPrice}} <el-button type="danger" style=" font-size: 18px;" round @click="navTo('/front/check')">结算</el-button>
@@ -66,6 +70,9 @@
 
 <script>
 
+import LottieAnimation from "@/components/LottieAnimation";
+import Lottie from "lottie-web";
+import * as animationData from "@/assets/数据 (1).json";
 export default {
 
   data() {
@@ -79,10 +86,23 @@ export default {
       addressId: null,
       addressData: [],
       selectedData: [],
+      animationData
     }
   },
+  components: {
+    LottieAnimation,
+  },
   mounted() {
-    this.loadGoods(1)
+    this.$nextTick(() => {
+      // 初始化 Lottie 动画
+      const lottieInstance = Lottie.loadAnimation({
+        container: this.$refs.lottieContainer,
+        renderer: 'svg',
+        loop: this.lottieOptions.loop,
+        autoplay: this.lottieOptions.autoplay,
+        animationData: this.lottieOptions.animationData,
+      });
+    });
     this.loadAddress()
   },
   // methods：本页面所有的点击事件或者其他函数定义区
@@ -180,3 +200,23 @@ export default {
   }
 }
 </script>
+<style scoped>
+.section-container {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  /*justify-content:space-between ; !* 水平间距 *!*/
+  /*margin: 40px 0 0 15px; !* 上外边距 *!*/
+}
+
+.section-title {
+  height: 40px;
+  background-color: #04BF04FF;
+  font-size: 20px;
+  color: white;
+  width: 130px;
+  font-weight: bold;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
+}
+</style>
