@@ -50,4 +50,13 @@ public interface OrdersMapper {
     int getTotalOrderCountByMerchantIdAndDate(Integer merchantId, String startDate, String endDate);
 
     Double getTotalAmountByMerchantIdAndDate(Integer merchantId, String startDate, String endDate);
+
+    /**
+     * 根据订单号更新支付状态
+     */
+    int updateStatusById(int id);
+
+    @Select("select * from orders where order_id = #{orderNo}")
+    List<Orders> selectByOrderNo(String orderNo);
+
 }

@@ -36,7 +36,7 @@ public class OrdersService {
     /**
      * 新增
      */
-    public void add(Orders orders) {
+    public String add(Orders orders) {
         orders.setOrderId(DateUtil.format(new Date(), "yyyyMMddHHmmss"));
         for (Cart cart : orders.getCartData()) {
             Orders dbOrders = new Orders();
@@ -50,12 +50,14 @@ public class OrdersService {
             // 把购物车里对应的商品删掉
             cartMapper.deleteById(cart.getId());
             System.out.println(cart.getId());
-            System.out.println("删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车");
+//            System.out.println("删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车删除购物车");
             // 把商品销量增加一下
             Goods goods = goodsMapper.selectById(cart.getGoodsId());
             goods.setCount(goods.getCount() + cart.getNum());
             goodsMapper.updateById(goods);
         }
+
+        return orders.getOrderId();
     }
 
     /**

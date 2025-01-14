@@ -40,7 +40,7 @@
         where  id = #{id}
     </delete>
 
-    <insert id="insert" parameterType="com.example.entity.Orders" useGeneratedKeys="true">
+    <insert id="insert" parameterType="com.example.entity.Orders" useGeneratedKeys="true" keyProperty="id">
         insert into orders
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -96,6 +96,7 @@
         </set>
         where id = #{id}
     </update>
+    <update id="updateStatusById">update orders set status = "待发货" where id = #{id}</update>
 
     <!-- 查询商家在指定日期的订单总数 -->
     <select id="selectOrderCountByMerchantIdAndDate" resultType="int">
@@ -128,7 +129,6 @@
         WHERE business_id = #{merchantId}
           AND order_time BETWEEN #{startDate} AND #{endDate}
     </select>
-
 
 
 </mapper>
