@@ -62,7 +62,7 @@
             </div>
 
                   <div style="flex: 2; font-size: 20px; text-align: right; padding-right: 40px">
-                    共计 ￥   {{totalPrice}}    <el-button type="danger" style=" font-size: 18px;" round @click="pay">提交订单</el-button>
+                    共计 ￥   {{totalPrice}}    <el-button type="danger" style=" font-size: 18px;" round @click="pay">支付</el-button>
                   </div>
                 </div>
       </div>
