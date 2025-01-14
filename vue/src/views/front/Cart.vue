@@ -103,6 +103,7 @@ export default {
         animationData: this.lottieOptions.animationData,
       });
     });
+    this.loadGoods(1)
     this.loadAddress()
   },
   // methods：本页面所有的点击事件或者其他函数定义区
