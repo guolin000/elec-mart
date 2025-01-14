@@ -80,7 +80,16 @@
             </div>
           </div>
         </div>
-        <div style="margin: 40px 0 0 15px; height: 40px; background-color: #04BF04FF; font-size: 20px; color: white; width: 130px; font-weight: bold; line-height: 40px; text-align: center; border-radius: 20px">热卖商品</div>
+        <!-- 热卖商品区域 -->
+        <div class="section-container">
+          <lottie-animation
+              :animation-data="animationData2"
+              :loop="true"
+              :autoplay="true"
+              style="width: 150px; height: 150px;margin-left: 8px;"
+          ></lottie-animation>
+          <div class="section-title">热卖商品</div>
+        </div>
         <div style="margin: 10px 5px 0 5px">
           <el-row>
             <el-col :span="5" v-for="item in goodsData">
@@ -90,7 +99,16 @@
             </el-col>
           </el-row>
         </div>
-        <div style="margin: 40px 0 0 15px; height: 40px; background-color: #04BF04FF; font-size: 20px; color: white; width: 130px; font-weight: bold; line-height: 40px; text-align: center; border-radius: 20px">猜你喜欢</div>
+        <!-- 猜你喜欢区域 -->
+        <div class="section-container">
+          <lottie-animation
+              :animation-data="animationData"
+              :loop="true"
+              :autoplay="true"
+              style="width: 150px; height: 150px;margin-top: 10px;margin-left: 8px"
+          ></lottie-animation>
+          <div class="section-title">猜你喜欢</div>
+        </div>
         <div style="margin: 10px 5px 0 5px">
           <el-row>
             <el-col :span="5" v-for="item in recommendData">
@@ -107,7 +125,11 @@
 </template>
 
 <script>
-
+import * as animationData from '../../assets/推荐.json';
+import * as animationData2 from '../../assets/热销.json';
+import * as animationData3 from '../../assets/38.json';
+import LottieAnimation from '../../components/LottieAnimation';
+import Lottie from "lottie-web";
 export default {
 
   data() {
@@ -135,10 +157,27 @@ export default {
         require('@/assets/imgs/slider-5.png'),
         require('@/assets/imgs/slider-6.png'),
         require('@/assets/imgs/slider-7.png'),
-      ]
+      ],
+      // Lottie动画
+      animationData,
+      animationData2,
+      animationData3,
     }
   },
+  components: {
+    LottieAnimation,
+  },
   mounted() {
+    this.$nextTick(() => {
+      // 初始化 Lottie 动画
+      const lottieInstance = Lottie.loadAnimation({
+        container: this.$refs.lottieContainer,
+        renderer: 'svg',
+        loop: this.lottieOptions.loop,
+        autoplay: this.lottieOptions.autoplay,
+        animationData: this.lottieOptions.animationData,
+      });
+    });
     this.loadType()
     this.loadNotice()
     this.loadGoods()
@@ -203,17 +242,30 @@ export default {
   background-size: 100%;
   background-image: url('@/assets/imgs/img.png');
 }
-.left {
-  width: 17%;
-  //background-repeat: no-repeat;
-  //background-image: url('@/assets/imgs/bg4.jpg');
+.section-container {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  /*justify-content: ; !* 水平间距 *!*/
+  margin: 40px 0 0 15px; /* 上外边距 */
 }
-.right {
-  width: 17%;
-  //background-repeat: no-repeat;
 
+.section-title {
+  height: 40px;
+  background-color: #04BF04FF;
+  font-size: 20px;
+  color: white;
+  width: 130px;
+  font-weight: bold;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
 }
-.el-col-5{
+
+.left, .right {
+  width: 17%;
+}
+
+.el-col-5 {
   width: 20%;
   max-width: 20%;
   padding: 10px 10px;
