@@ -15,7 +15,7 @@
             <el-button
                 type="primary"
                 style="margin-top: 10px; width: 100%; background-color: #FF5000; border-color: #FF5000;"
-                @click="addCart">
+                @click="secKill">
               立即秒杀
             </el-button>
           </el-col>
@@ -69,16 +69,36 @@ export default {
     handleClick(tab, event) {
       this.activeName = tab.name
     },
-    addCart() {
+    secKill() {
       let data = {seckillId: this.seckillId, userId: this.user.id}
       console.log(data)
       this.$request.post('/seckill/seckill_p?seckillId=' + data.seckillId + '&userId=' + data.userId).then(res => {
         if (res.code === '200') {
           this.$message.success(res.data)
+          this.buy()
         } else {
           this.$message.error(res.msg)
         }
       })
+    },
+    addCart() {
+      let data = {num: 1, userId: this.user.id, goodsId: this.goodsData.goodsId, businessId: this.goodsData.businessId}
+      this.$request.post('/cart/add', data).then(res => {
+        if (res.code === '200') {
+          this.$message.success('生成订单')
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    buy(){
+      this.addCart()
+      console.log(this.goodsData.goodsId)
+      this.$router.push({
+        name: 'Check',
+        query: { buyGoodsId: this.goodsData.goodsId }
+      });
+
     },
     navTo(url) {
       location.href = url
