@@ -2,6 +2,7 @@ package com.example.controller;
 
 import cn.hutool.core.date.DateTime;
 import com.example.common.Result;
+import com.example.entity.Cart;
 import com.example.entity.Seckill;
 import com.example.entity.SeckillGoods;
 import com.example.service.SeckillService;
@@ -23,7 +24,7 @@ public class SeckillController {
     // 获取所有秒杀商品
     @PostMapping("/add")
     public Result addSeckillProducts(
-            @RequestParam("goodsId") List<Integer> goodsId,
+            @RequestParam("goodsId") Integer goodsId,
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") DateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") DateTime endDate,
             @RequestParam("price") Double price,
@@ -33,8 +34,14 @@ public class SeckillController {
         System.out.println("startDate: " + startDate);
         System.out.println("endDate: " + endDate);
 
-        seckillService.addSeckillProducts(goodsId, startDate, endDate, price, num);
-        return Result.success();
+        String res = seckillService.addSeckillProducts(goodsId, startDate, endDate, price, num);
+        return Result.success(res);
+    }
+
+    @GetMapping("/delete")
+    public Result deleteById(@RequestParam("ids") Integer id) {
+        String res = seckillService.deleteById(id);
+        return Result.success(res);
     }
 
     // 获取所有秒杀商品

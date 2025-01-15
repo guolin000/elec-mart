@@ -22,7 +22,8 @@
       <el-button type="primary" plain @click="handleAdd">发布商品</el-button>
       <el-button type="danger" plain @click="delBatch">批量删除</el-button>
       <el-button type="success" plain @click="toggleBatchGoodsUp">批量上下架</el-button>
-      <el-button id="seckill-button" plain @click="openSeckillDialog">上架秒杀</el-button>
+      <el-button id="seckill-button" plain @click="openSeckillDialog" style="background-color: #ff5e5e; color: white;">上架秒杀</el-button>
+      <el-button id="cancel-button" plain @click="seckillcancel" style="background-color: dodgerblue; color: white;">下架秒杀</el-button>
     </div>
 
     <div class="table">
@@ -506,6 +507,10 @@ export default {
         this.$message.warning('请选择商品');
         return;
       }
+      if (this.ids.length>1) {
+        this.$message.warning('不允许批量操作！');
+        return;
+      }
       this.seckillForm = { startTime: null, endTime: null, seckillPrice: null };  // 重置表单数据
       this.seckillDialogVisible = true;  // 显示弹窗
     },
@@ -539,10 +544,10 @@ export default {
         price: this.seckillForm.seckillPrice,
         num: this.seckillForm.num,
       }
-      this.$request.post('/seckill/add?goodsId=' + this.ids + '&startDate=' + data.startDate + '&endDate=' + data.endDate
+      this.$request.post('/seckill/add?goodsId=' + this.ids.pop() + '&startDate=' + data.startDate + '&endDate=' + data.endDate
           + '&price=' + data.price + '&num=' + data.num).then(res => {
         if (res.code === '200') {
-          this.$message.success('秒杀上架成功');
+          this.$message.success(res.data);
           this.seckillDialogVisible = false;  // 关闭弹窗
           // 可以根据需要重新加载商品数据
         } else {
@@ -551,6 +556,23 @@ export default {
       }).catch(err => {
         this.$message.error('保存失败');
       });
+    },
+    seckillcancel(){
+      if (!this.ids.length) {
+        this.$message.warning('请选择商品');
+        return;
+      }
+      if (this.ids.length>1) {
+        this.$message.warning('不允许批量操作！');
+        return;
+      }
+      this.$request.get('/seckill/delete?ids=' + this.ids.pop()).then(res => {
+        if (res.code === '200') {
+          this.$message.success(res.data)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
   }
 }

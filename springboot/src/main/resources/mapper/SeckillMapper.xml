@@ -10,6 +10,21 @@
         VALUES (#{goodsId}, #{seckillPrice}, #{seckillNum}, #{seckillBegin},#{seckillEnd})
     </insert>
 
+    <delete id="delete">
+        delete from seckill
+        where  goods_id = #{id}
+    </delete>
+
+    <!-- 根据秒杀ID获取秒杀商品信息 -->
+    <select id="selectById" resultType="com.example.entity.Seckill">
+        SELECT
+            s.*
+        FROM
+            seckill s
+        WHERE
+            goods_id = #{goodsId}
+    </select>
+
     <!-- 根据秒杀ID获取秒杀商品信息 -->
     <select id="getSeckillBySeckillId" resultType="com.example.entity.SeckillGoods">
         SELECT

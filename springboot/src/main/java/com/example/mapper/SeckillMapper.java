@@ -12,8 +12,13 @@ public interface SeckillMapper {
 
     int insert(Seckill seckill);
 
+    int delete(Integer id);
+
+
     // 根据秒杀ID获取秒杀商品信息
     SeckillGoods getSeckillBySeckillId(Long seckillId);
+
+    Seckill selectById(Integer id);
 
     // 更新秒杀商品库存（使用seckillNum字段）
     void updateStock(Long seckillId, Integer seckillNum);

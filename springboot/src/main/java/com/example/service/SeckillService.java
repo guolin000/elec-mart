@@ -142,23 +142,30 @@ public class SeckillService {
         }
     }
 
-    public void addSeckillProducts(List<Integer> goodsId, DateTime seckillBegin, DateTime seckillEnd, Double seckillPrice, Integer seckillNum) {
+    public String addSeckillProducts(Integer goodsId, DateTime seckillBegin, DateTime seckillEnd, Double seckillPrice, Integer seckillNum) {
 
         Seckill seckill = new Seckill();
-        for (Integer id : goodsId) {
-            // 对每个 id 执行操作
-            System.out.println("商品ID: " + id);
-
-            // 你可以在这里使用 id 创建相应的 seckill 实例，或者做其他处理
-            seckill.setGoodsId(id);
-            seckill.setSeckillBegin(seckillBegin);
-            seckill.setSeckillEnd(seckillEnd);
-            seckill.setSeckillPrice(seckillPrice);
-            seckill.setSeckillNum(seckillNum);
-
-            // 执行插入操作
-            seckillMapper.insert(seckill);
+        if (seckillMapper.selectById(goodsId) != null) {
+            String res = "已上架秒杀！若要修改请先下架";
+            return res;
         }
+        seckill.setGoodsId(goodsId);
+        seckill.setSeckillBegin(seckillBegin);
+        seckill.setSeckillEnd(seckillEnd);
+        seckill.setSeckillPrice(seckillPrice);
+        seckill.setSeckillNum(seckillNum);
+        // 执行插入操作
+        seckillMapper.insert(seckill);
+        return "上架秒杀成功!";
+    }
+
+    public String deleteById(Integer id) {
+
+        if (seckillMapper.selectById(id) == null) {
+            return "该商品还未上架秒杀！";
+        }
+        seckillMapper.delete(id);
+        return "下架秒杀成功！";
     }
 
     // 获取所有秒杀商品

@@ -51,7 +51,6 @@
             <el-menu-item v-if="user.role === 'ADMIN'" index="/secondType">二级分类</el-menu-item>
             <el-menu-item v-if="user.role === 'ADMIN'" index="/goods">商品信息</el-menu-item>
             <el-menu-item v-if="user.role === 'BUSINESS'" index="/businessGoods">商品信息</el-menu-item>
-            <el-menu-item v-if="user.role === 'BUSINESS'" index="/seckill">秒杀商品管理</el-menu-item>
             <el-menu-item v-if="user.role === 'BUSINESS'" index="/businessOrders">订单管理</el-menu-item>
             <el-menu-item v-else index="/orders">订单管理</el-menu-item>
             <el-menu-item index="/comment">评论管理</el-menu-item>
