@@ -270,7 +270,7 @@ export default {
     },
     cancel() {
       this.fromVisible = false
-      location.href = '/goods'
+      location.href = '/businessGoods'
     },
     save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
       this.$refs.formRef.validate((valid) => {
@@ -285,7 +285,7 @@ export default {
               this.$message.success('保存成功')
               // this.load(1)
               this.fromVisible = false
-              location.href = '/goods'
+              location.href = '/businessGoods'
             } else {
               this.$message.error(res.msg)  // 弹出错误的信息
             }
