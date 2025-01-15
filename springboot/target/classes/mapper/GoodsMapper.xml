@@ -28,10 +28,10 @@
     </select>
 
     <select id="selectById" resultType="com.example.entity.Goods">
-        select goods.*, business.name as businessName, type.name as typeName
+        select goods.*, business.name as businessName, second_type.name as typeName
         from goods
         left join business on goods.business_id = business.id
-        left join type on goods.type_id = type.id
+        left join second_type on goods.type_id = second_type.id
         where goods.id = #{id}
     </select>
 
