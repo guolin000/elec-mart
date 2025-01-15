@@ -51,6 +51,7 @@ const routes = [
       { path: 'cart', name: 'Cart', meta: { name: '我的购物车' }, component: () => import('../views/front/Cart') },
       { path: 'cart_seckill', name: 'Cart_seckill', meta: { name: '秒杀购物车' }, component: () => import('../views/front/Cart_seckill') },
       { path: 'orders', name: 'Orders', meta: { name: '我的订单' }, component: () => import('../views/front/Orders') },
+      { path: 'orders_seckill', name: 'Orders_seckill', meta: { name: '秒杀订单' }, component: () => import('../views/front/Orders_seckill') },
       { path: 'search', name: 'Search', meta: { name: '搜索页面' }, component: () => import('../views/front/Search') },
       { path: 'check', name: 'Check', meta: { name: '结算页面' }, component: () => import('../views/front/Check') },
       { path: 'check_seckill', name: 'Check_seckill', meta: { name: '结算页面-秒杀' }, component: () => import('../views/front/Check_seckill') },
