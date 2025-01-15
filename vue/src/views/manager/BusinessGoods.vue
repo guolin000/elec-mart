@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top">
-      <div class="search">
+      <div class="search" style="margin-left: -250px">
         <el-input placeholder="请输入商品名称查询" style="width: 200px" v-model="name"></el-input>
         <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
         <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
@@ -128,9 +128,16 @@
         <el-form-item prop="price" label="商品价格">
           <el-input v-model="form.price" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item prop="typeId" label="商品分类">
-          <el-select v-model="form.typeId" placeholder="请选择分类" style="width: 100%">
+        <el-form-item prop="typeId" label="一级分类">
+          <el-select   v-model="form.secondTypeId" placeholder="请选择分类" style="width: 100%" @change="loadSecondTypes">
             <el-option v-for="item in typeData" :label="item.name" :value="item.id" :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="secondTypeData" label="二级分类">
+          <el-select v-model="form.typeId" placeholder="请选择分类" style="width: 100%"
+                     :disabled="!secondTypeData.length"
+          >
+            <el-option v-for="item in secondTypeData" :label="item.name" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="unit" label="计件单位">
@@ -183,7 +190,10 @@ export default {
       goodsUp: null,  // 上下架状态筛选条件
       fromVisible: false,
       editorVisible: false,
-      form: {},
+      form: {
+        typeId: null,  // 一级分类ID
+        secondTypeId: null, // 二级分类ID
+      },
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       rules: {
         name: [
@@ -193,7 +203,7 @@ export default {
           { required: true, message: '请输入商品价格', trigger: 'blur' },
         ],
         typeId: [
-          { required: true, message: '请选择商品分类', trigger: 'change' },
+          { required: true, message: '请选择二级分类', trigger: 'blur' },
         ],
         unit: [
           { required: true, message: '请输入计件单位', trigger: 'blur' },
@@ -201,9 +211,13 @@ export default {
         description: [
           { required: true, message: '请输入商品介绍', trigger: 'blur' },
         ],
+        secondTypeId: [
+          { required: true, message: '请选择一级分类', trigger: 'blur' },
+        ],
       },
       ids: [],
       typeData: [],
+      secondTypeData: [],
       viewData: null,
     };
   },
@@ -218,6 +232,21 @@ export default {
           this.typeData = res.data
         } else {
           this.$message.error(res.msg)
+        }
+      })
+    },
+    loadSecondTypes(typeId) {
+      if (!typeId) {
+        this.secondTypeData = []
+        this.form.secondTypeId = null
+        return
+      }
+      this.$request.get('/secondType/selectByTypeId/' + typeId).then(res => {
+        if (res.code === '200') {
+          this.secondTypeData = res.data
+        } else {
+          this.$message.error(res.msg)
+          this.secondTypeData = []
         }
       })
     },
