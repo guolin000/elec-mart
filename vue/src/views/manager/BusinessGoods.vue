@@ -208,9 +208,9 @@ export default {
         unit: [
           { required: true, message: '请输入计件单位', trigger: 'blur' },
         ],
-        description: [
-          { required: true, message: '请输入商品介绍', trigger: 'blur' },
-        ],
+        // description: [
+        //   { required: true, message: '请输入商品介绍', trigger: 'change' },
+        // ],
         secondTypeId: [
           { required: true, message: '请选择一级分类', trigger: 'blur' },
         ],
