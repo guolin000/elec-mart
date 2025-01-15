@@ -9,9 +9,9 @@
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Goods">
-        select goods.*, goods.status, goods.goods_up, type.name as typeName, business.name as businessName
+        select goods.*, goods.status, goods.goods_up, second_type.name as typeName, business.name as businessName
         from goods
-        left join type on goods.type_id = type.id
+        left join second_type on goods.type_id = second_type.id
         left join business on goods.business_id = business.id
         <where>
             <if test="id != null"> and id= #{id}</if>

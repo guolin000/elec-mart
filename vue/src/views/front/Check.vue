@@ -109,28 +109,22 @@ export default {
     },
     loadGoods() {
             this.goodsId=Number(this.$route.query.buyGoodsId)
+            //立即购买
             if(this.goodsId!=null && !Number.isNaN(this.goodsId)){
-
-                // console.log(this.goodsId)
                 this.$request.get('/cart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
                       if (res.code === '200') {
-                        // console.table(res.data)
                         this.goodsData = res.data
-                        // console.table(this.goodsData)
                         //计算总价
                         this.totalPrice = 0
                         this.goodsData.forEach(item => {
-                          // console.log("111")
-                          // console.log( item.num)
                           this.totalPrice = item.goodsPrice * item.num
                         })
                       } else {
                          this.$message.error(res.msg)
                       }
                 })
-
-
             }
+            //购物车提交订单
             else{
                 const selectedData = this.$route.query.selectedData;
                 if (selectedData) {
@@ -140,23 +134,9 @@ export default {
               //计算总价
                 this.totalPrice = 0
                 this.goodsData.forEach(item => {
-                    console.log("111")
-                    console.log( item.goodsPrice)
                     this.totalPrice += item.goodsPrice * item.num
                 })
-
             }
-      // console.table(this.goodsData)
-    //计算总价
-    //                   this.totalPrice = 0
-    //                         this.goodsData.forEach(item => {
-    //                           console.log("111")
-    //                         console.log( item.goodsPrice)
-    //                         this.totalPrice += item.goodsPrice * item.num
-    //                   })
-
-
-
         },
 
     dayin(){
