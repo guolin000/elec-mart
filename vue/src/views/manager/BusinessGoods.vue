@@ -22,6 +22,7 @@
       <el-button type="primary" plain @click="handleAdd">发布商品</el-button>
       <el-button type="danger" plain @click="delBatch">批量删除</el-button>
       <el-button type="success" plain @click="toggleBatchGoodsUp">批量上下架</el-button>
+      <el-button id="seckill-button" plain @click="openSeckillDialog">上架秒杀</el-button>
     </div>
 
     <div class="table">
@@ -108,6 +109,38 @@
             :total="total">
         </el-pagination>
       </div>
+
+      <el-dialog title="上架秒杀" :visible.sync="seckillDialogVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
+        <el-form :model="seckillForm" :rules="seckillRules" ref="seckillFormRef">
+          <el-form-item label="秒杀开始时间" prop="startTime">
+            <el-date-picker
+                v-model="seckillForm.startTime"
+                type="datetime"
+                placeholder="选择开始时间"
+                style="width: 100%;"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="秒杀结束时间" prop="endTime">
+            <el-date-picker
+                v-model="seckillForm.endTime"
+                type="datetime"
+                placeholder="选择结束时间"
+                style="width: 100%;"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="秒杀价格" prop="seckillPrice">
+            <el-input v-model="seckillForm.seckillPrice" placeholder="输入秒杀价格"></el-input>
+          </el-form-item>
+          <el-form-item label="放入数量" prop="num">
+            <el-input v-model="seckillForm.num" placeholder="输入数量"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="cancelSeckill">取消</el-button>
+          <el-button type="primary" @click="saveSeckill">确定</el-button>
+        </div>
+      </el-dialog>
+
     </div>
 
     <el-dialog title="信息" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close @close="cancel">
@@ -190,6 +223,22 @@ export default {
       goodsUp: null,  // 上下架状态筛选条件
       fromVisible: false,
       editorVisible: false,
+      // 表单数据
+      seckillForm: {
+        startTime: null,
+        endTime: null,
+        seckillPrice: null,
+        num: null,
+      },
+      // 秒杀表单的校验规则
+      seckillRules: {
+        startTime: [{ required: true, message: '请选择秒杀开始时间', trigger: 'blur' }],
+        endTime: [{ required: true, message: '请选择秒杀结束时间', trigger: 'blur' }],
+        seckillPrice: [{ required: true, message: '请输入秒杀价格', trigger: 'blur' }],
+      },
+      // 控制秒杀弹窗的显示
+      seckillDialogVisible: false,
+      ids: [],  // 选中的商品ID
       form: {
         typeId: null,  // 一级分类ID
         secondTypeId: null, // 二级分类ID
@@ -215,7 +264,6 @@ export default {
           { required: true, message: '请选择一级分类', trigger: 'blur' },
         ],
       },
-      ids: [],
       typeData: [],
       secondTypeData: [],
       viewData: null,
@@ -451,6 +499,58 @@ export default {
     },
     handleAvatarSuccess(response, file, fileList) {
       this.form.img = response.data
+    },
+    // 打开秒杀表单弹窗
+    openSeckillDialog() {
+      if (!this.ids.length) {
+        this.$message.warning('请选择商品');
+        return;
+      }
+      this.seckillForm = { startTime: null, endTime: null, seckillPrice: null };  // 重置表单数据
+      this.seckillDialogVisible = true;  // 显示弹窗
+    },
+    // 取消秒杀操作
+    cancelSeckill() {
+      this.seckillDialogVisible = false;
+    },
+    // 保存秒杀数据
+    saveSeckill() {
+      // 获取年月日时分秒
+      const year = this.seckillForm.startTime.getFullYear();
+      const month = (this.seckillForm.startTime.getMonth() + 1).toString().padStart(2, '0');  // 月份是从0开始的，所以需要加1
+      const day = this.seckillForm.startTime.getDate().toString().padStart(2, '0');
+      const hours = this.seckillForm.startTime.getHours().toString().padStart(2, '0');
+      const minutes = this.seckillForm.startTime.getMinutes().toString().padStart(2, '0');
+      const seconds = this.seckillForm.startTime.getSeconds().toString().padStart(2, '0');
+      // 拼接成所需格式
+      const startTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      // 获取年月日时分秒
+      const year1 = this.seckillForm.endTime.getFullYear();
+      const month1 = (this.seckillForm.endTime.getMonth() + 1).toString().padStart(2, '0');  // 月份是从0开始的，所以需要加1
+      const day1 = this.seckillForm.endTime.getDate().toString().padStart(2, '0');
+      const hours1 = this.seckillForm.endTime.getHours().toString().padStart(2, '0');
+      const minutes1 = this.seckillForm.endTime.getMinutes().toString().padStart(2, '0');
+      const seconds1 = this.seckillForm.endTime.getSeconds().toString().padStart(2, '0');
+      // 拼接成所需格式
+      const endTime = `${year1}-${month1}-${day1} ${hours1}:${minutes1}:${seconds1}`;
+      let data = {
+        startDate: startTime,
+        endDate: endTime,
+        price: this.seckillForm.seckillPrice,
+        num: this.seckillForm.num,
+      }
+      this.$request.post('/seckill/add?goodsId=' + this.ids + '&startDate=' + data.startDate + '&endDate=' + data.endDate
+          + '&price=' + data.price + '&num=' + data.num).then(res => {
+        if (res.code === '200') {
+          this.$message.success('秒杀上架成功');
+          this.seckillDialogVisible = false;  // 关闭弹窗
+          // 可以根据需要重新加载商品数据
+        } else {
+          this.$message.error(res.msg);
+        }
+      }).catch(err => {
+        this.$message.error('保存失败');
+      });
     },
   }
 }

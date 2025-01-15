@@ -2,12 +2,15 @@ package com.example.mapper;
 
 import com.example.entity.Seckill;
 import com.example.entity.SeckillGoods;
+import com.example.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
 public interface SeckillMapper {
+
+    int insert(Seckill seckill);
 
     // 根据秒杀ID获取秒杀商品信息
     SeckillGoods getSeckillBySeckillId(Long seckillId);
