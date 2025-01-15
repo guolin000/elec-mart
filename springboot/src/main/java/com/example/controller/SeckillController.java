@@ -42,6 +42,9 @@ public class SeckillController {
     @PostMapping("/seckill_p")
     public Result seckill(@RequestParam Long seckillId, @RequestParam Integer userId) {
         String res = seckillService.seckill(seckillId, userId);
-        return Result.success(res);
+        if (res.equals("秒杀成功")){
+            return Result.success(res);
+        }
+        return Result.error("500",res);
     }
 }

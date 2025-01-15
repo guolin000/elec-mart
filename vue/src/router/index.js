@@ -49,9 +49,11 @@ const routes = [
       { path: 'collect', name: 'Collect', meta: { name: '我的收藏' }, component: () => import('../views/front/Collect') },
       { path: 'address', name: 'Address', meta: { name: '我的地址' }, component: () => import('../views/front/Address') },
       { path: 'cart', name: 'Cart', meta: { name: '我的购物车' }, component: () => import('../views/front/Cart') },
+      { path: 'cart_seckill', name: 'Cart_seckill', meta: { name: '秒杀购物车' }, component: () => import('../views/front/Cart_seckill') },
       { path: 'orders', name: 'Orders', meta: { name: '我的订单' }, component: () => import('../views/front/Orders') },
       { path: 'search', name: 'Search', meta: { name: '搜索页面' }, component: () => import('../views/front/Search') },
       { path: 'check', name: 'Check', meta: { name: '结算页面' }, component: () => import('../views/front/Check') },
+      { path: 'check_seckill', name: 'Check_seckill', meta: { name: '结算页面-秒杀' }, component: () => import('../views/front/Check_seckill') },
       { path: 'seckill', name: 'Seckill', meta: { name: '秒杀活动' }, component: () => import('../views/front/Seckill') }, // 添加秒杀页面
       { path: 'product', name: 'Product', meta: { name: '秒杀商品' }, component: () => import('../views/front/Product') },
     ]
