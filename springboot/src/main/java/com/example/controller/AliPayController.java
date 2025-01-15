@@ -131,15 +131,15 @@ public class AliPayController {
                 System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
 
 
-                String tradeNo = params.get("out_trade_no");
-                String gmtPayment = params.get("gmt_payment");
-                String alipayTradeNo = params.get("trade_no");
-                // 更新订单状态为已支付，设置支付信息
-                Orders orders = orderMapper.selectById(Integer.valueOf(tradeNo));
-                orders.setStatus("已支付");
+//                String tradeNo = params.get("out_trade_no");
+//                String gmtPayment = params.get("gmt_payment");
+//                String alipayTradeNo = params.get("trade_no");
+//                // 更新订单状态为已支付，设置支付信息
+//                Orders orders = orderMapper.selectById(Integer.valueOf(tradeNo));
+//                orders.setStatus("已支付");
 //                orders.setOrderTime(gmtPayment);
 //                orders.setPayNo(alipayTradeNo);
-                orderMapper.updateById(orders);
+//                orderMapper.updateById(orders);
 
             }
         }
