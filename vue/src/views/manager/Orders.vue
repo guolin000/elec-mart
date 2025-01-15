@@ -1,8 +1,10 @@
 <template>
   <div>
     <div class="top">
-      <div class="search">
+      <div class="search"style="margin-left: -155px">
         <el-input placeholder="请输入订单编号" style="width: 200px" v-model="orderId"></el-input>
+        <el-input placeholder="请输入收货人名称" style="width: 200px;margin-left: 6px" v-model="username"></el-input>
+        <el-input placeholder="请输入店铺名称" style="width: 200px;margin-left: 6px" v-model="businessName"></el-input>
         <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
         <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
       </div>
@@ -82,6 +84,8 @@ export default {
       pageSize: 10,   // 每页显示的个数
       total: 0,
       orderId: null,  // 订单编号搜索条件
+      username: null,
+      businessName: null,
       orderStatus: null,  // 订单状态筛选条件
       form: {},
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
@@ -147,6 +151,8 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           orderId: this.orderId,
+          username: this.username,
+          businessName: this.businessName,
         }
       }).then(res => {
         if (res.code === '200') {
@@ -161,6 +167,8 @@ export default {
     reset() {
       this.orderId = null;
       this.orderStatus = null;
+      this.businessName = null;
+      this.username = null;
       this.load(1);
     },
     handleCurrentChange(pageNum) {

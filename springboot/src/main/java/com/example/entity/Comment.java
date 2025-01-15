@@ -18,6 +18,7 @@ public class Comment implements Serializable {
     private String goodsName;
     private String userAvatar;
     private String userName;
+    private String typeName;
 
     private String time;
     private String content;
@@ -67,6 +68,14 @@ public class Comment implements Serializable {
 
     public void setGoodsName(String goodsName) {
         this.goodsName = goodsName;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getTime() {
