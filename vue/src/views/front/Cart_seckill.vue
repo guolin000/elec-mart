@@ -14,7 +14,7 @@
           </div>
 
           <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">
-            已选商品 ￥ {{totalPrice}} <el-button type="danger" style=" font-size: 18px;" round @click="navTo('/front/check')">结算</el-button>
+            已选商品 ￥ {{totalPrice}} <el-button type="danger" style=" font-size: 18px;" round @click="navTo('/front/check_seckill')">结算</el-button>
           </div>
         </div>
         <div style="margin: 20px 0; padding: 0 50px">
@@ -143,7 +143,7 @@ export default {
       }
 
       this.$router.push({
-        name: 'Check',
+        name: 'Check_seckill',
         query: { selectedData: JSON.stringify(this.selectedData) }
       });
     },

@@ -136,7 +136,7 @@ export default {
         if (selectedData) {
           this.goodsData = JSON.parse(selectedData);
         }
-        console.table(this.goodsData)
+        //console.table(this.goodsData)
         //计算总价
         this.totalPrice = 0
         this.goodsData.forEach(item => {
@@ -227,6 +227,7 @@ export default {
         price: this.totalPrice
       }
       this.$request.post('/seckillorders/add', data).then(res => {
+        console.log(data)
         if (res.data !== null) {
           console.log("res.data:"+res.data)
           this.$message.success('操作成功')

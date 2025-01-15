@@ -9,10 +9,11 @@
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.SeckillCart">
-        select seckillcart.*, business.name as businessName, goods.img as goodsImg, goods.name as goodsName, goods.price as goodsPrice, goods.unit as goodUnit
+        select seckillcart.*, business.name as businessName, goods.img as goodsImg, goods.name as goodsName, seckill.seckill_price as goodsPrice, goods.unit as goodUnit
         from seckillcart
         left join business on seckillcart.business_id = business.id
         left join goods on seckillcart.goods_id = goods.id
+        left join seckill on seckillcart.goods_id = seckill.goods_id
         <where>
             <if test="id != null"> and id= #{id}</if>
             <if test="userId != null"> and user_id = #{userId}</if>
