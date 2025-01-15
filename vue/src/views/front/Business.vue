@@ -31,7 +31,24 @@
         </div>
       </div>
       <div style="border-radius: 20px; padding: 0 20px; background-color: white; margin-top: 20px">
-        <div style="font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid">本店所有商品（{{goodsData.length}}件）</div>
+        <div class="section-container" style="flex:1;">
+          <div style="display: flex; align-items: center;">
+            <lottie-animation
+                :animation-data="animationData"
+                :loop="true"
+                :autoplay="true"
+                style="width:50px; height:50px;"
+            ></lottie-animation>
+            <div style="font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid">本店所有商品（{{goodsData.length}}件）</div>
+        </div>
+          <lottie-animation
+              :animation-data="animationData2"
+              :loop="true"
+              :autoplay="true"
+              style="width:130px; height:130px;"
+          ></lottie-animation>
+        </div>
+
         <div style="margin-top: 20px">
           <el-row>
             <el-col :span="5" style="margin-bottom: 20px" v-for="item in goodsData">
@@ -48,6 +65,11 @@
 
 <script>
 
+import * as animationData from "@/assets/书本.json";
+import * as animationData2 from "@/assets/数据.json";
+import LottieAnimation from "@/components/LottieAnimation";
+import Lottie from "lottie-web";
+
 export default {
 
   data() {
@@ -58,9 +80,24 @@ export default {
       goodsData: [],
       businessData: {},
       isFollowing: false,  // 当前用户是否关注了该店铺
-    };
+      animationData,
+      animationData2,
+    }
+  },
+  components: {
+    LottieAnimation,
   },
   mounted() {
+    this.$nextTick(() => {
+      // 初始化 Lottie 动画
+      const lottieInstance = Lottie.loadAnimation({
+        container: this.$refs.lottieContainer,
+        renderer: 'svg',
+        loop: this.lottieOptions.loop,
+        autoplay: this.lottieOptions.autoplay,
+        animationData: this.lottieOptions.animationData,
+      });
+    });
     this.loadFollow()
     this.loadBusiness()
     this.loadGoods()
@@ -154,6 +191,24 @@ export default {
   /* 已关注时的样式 */
   background-color: #67C23A; /* 绿色 */
   color: white;
+}
+ .section-container {
+   display: flex;
+   align-items: center; /* 垂直居中 */
+   justify-content:space-between ; /* 水平间距 */
+   /*margin: 40px 0 0 15px; !* 上外边距 *!*/
+ }
+
+.section-title {
+  height: 40px;
+  background-color: #04BF04FF;
+  font-size: 20px;
+  color: white;
+  width: 130px;
+  font-weight: bold;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
 }
 </style>
 
