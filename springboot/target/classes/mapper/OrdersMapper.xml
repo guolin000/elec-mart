@@ -25,6 +25,8 @@
             <if test="addressId != null"> and address_id = #{addressId}</if>
             <if test="status != null"> and status = #{status}</if>
             <if test="orderId != null"> and order_id = #{orderId}</if>
+            <if test="businessName != null"> and business.name like concat('%', #{businessName}, '%') </if>
+            <if test="username != null"> and address.username like concat('%', #{username}, '%') </if>
         </where>
     </select>
 

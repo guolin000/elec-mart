@@ -2,14 +2,18 @@
   <div>
     <div class="search">
       <el-input placeholder="请输入评论内容" style="width: 200px" v-model="content"></el-input>
-      <el-select v-model="selectedCategory" placeholder="请选择分类" style="width: 150px; margin-left: 10px">
-        <el-option
-            v-for="item in categories"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-        </el-option>
-      </el-select>
+      <el-input placeholder="请输入评论用户名称" style="width: 200px;margin-left: 6px" v-model="userName"></el-input>
+      <el-input placeholder="请输入商户名称" style="width: 200px;margin-left: 6px" v-model="businessName"></el-input>
+      <el-input placeholder="请输入商品类别" style="width: 200px;margin-left: 6px" v-model="typeName"></el-input>
+
+<!--      <el-select v-model="selectedCategory" placeholder="请选择分类" style="width: 150px; margin-left: 10px">-->
+<!--        <el-option-->
+<!--            v-for="item in categories"-->
+<!--            :key="item.id"-->
+<!--            :label="item.name"-->
+<!--            :value="item.id">-->
+<!--        </el-option>-->
+<!--      </el-select>-->
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
@@ -25,12 +29,12 @@
         <el-table-column prop="goodsName" label="商品名称" show-overflow-tooltip></el-table-column>
 
         <!-- 新增商品分类列 -->
-        <el-table-column label="商品分类">
-          <template v-slot="scope">
-            {{ goodsCategoryMap[scope.row.goodsId] || '未知分类' }}
-          </template>
-        </el-table-column>
-
+<!--        <el-table-column label="商品分类">-->
+<!--          <template v-slot="scope">-->
+<!--            {{ goodsCategoryMap[scope.row.goodsId] || '未知分类' }}-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+        <el-table-column prop="typeName" label="商品类别" show-overflow-tooltip></el-table-column>
         <el-table-column prop="content" label="评论内容" show-overflow-tooltip></el-table-column>
         <el-table-column prop="userName" label="评论用户" show-overflow-tooltip></el-table-column>
         <el-table-column prop="time" label="评论时间" show-overflow-tooltip></el-table-column>
@@ -67,9 +71,12 @@ export default {
       pageNum: 1,           // 当前页码
       pageSize: 10,         // 每页显示的个数
       total: 0,             // 总记录数
-      content: null,        // 查询的评论内容
+      userName:null,
+      content: null,
+      businessName: null,
+      typeName: null,
       selectedCategory: null, // 当前选中的分类ID
-      categories: [],       // 分类列表
+      // categories: [],       // 分类列表
       goodsCategoryMap: {}, // 商品分类映射表（goodsId => typeName）
       form: {},
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
@@ -77,7 +84,7 @@ export default {
     }
   },
   created() {
-    this.loadCategories();       // 加载分类列表
+    // this.loadCategories();       // 加载分类列表
     this.loadGoodsCategories();  // 加载商品分类映射
     this.load(1);                // 加载评论列表
   },
@@ -103,23 +110,23 @@ export default {
     },
 
     // 加载分类列表
-    loadCategories() {
-      this.$request.get('/type/selectPage', {
-        params: {
-          pageNum: 1,
-          pageSize: 1000
-        }
-      }).then(res => {
-        if (res.code === '200') {
-          this.categories = res.data?.list.map(item => ({
-            id: item.id,
-            name: item.name
-          }));
-        } else {
-          this.$message.error('加载分类失败');
-        }
-      });
-    },
+    // loadCategories() {
+    //   this.$request.get('/type/selectPage', {
+    //     params: {
+    //       pageNum: 1,
+    //       pageSize: 1000
+    //     }
+    //   }).then(res => {
+    //     if (res.code === '200') {
+    //       this.categories = res.data?.list.map(item => ({
+    //         id: item.id,
+    //         name: item.name
+    //       }));
+    //     } else {
+    //       this.$message.error('加载分类失败');
+    //     }
+    //   });
+    // },
 
     // 加载评论列表（带分页和分类筛选）
     load(pageNum) {
@@ -129,6 +136,9 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           content: this.content,
+          userName: this.userName,
+          typeName: this.typeName,
+          businessName: this.businessName,
         }
       }).then(res => {
         if (res.code === '200') {
@@ -160,6 +170,9 @@ export default {
     reset() {
       this.content = null;
       this.selectedCategory = null;
+      this.typeName = null;
+      this.userName = null;
+      this.businessName = null;
       this.load(1);
     },
 
