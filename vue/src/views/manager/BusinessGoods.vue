@@ -549,6 +549,7 @@ export default {
         if (res.code === '200') {
           this.$message.success(res.data);
           this.seckillDialogVisible = false;  // 关闭弹窗
+          this.load(1)
           // 可以根据需要重新加载商品数据
         } else {
           this.$message.error(res.msg);
@@ -569,6 +570,7 @@ export default {
       this.$request.get('/seckill/delete?ids=' + this.ids.pop()).then(res => {
         if (res.code === '200') {
           this.$message.success(res.data)
+          this.load(1)
         } else {
           this.$message.error(res.msg)
         }
