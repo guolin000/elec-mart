@@ -12,4 +12,5 @@ public class SecondType implements Serializable {
     private String description;
     private String img;
     private Integer typeId;
+    private String parentName;
 }

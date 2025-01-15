@@ -9,12 +9,13 @@
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.SecondType">
-        select
-        <include refid="Base_Column_List" />
+        select second_type.id,second_type.name,second_type.description,second_type.img,type.name as parentName,second_type.type_id
         from second_type
+        left join type on second_type.type_id=type.id
         <where>
             <if test="id != null"> and id= #{id}</if>
-            <if test="name != null"> and name like concat('%', #{name}, '%')</if>
+            <if test="name != null"> and second_type.name like concat('%', #{name}, '%')</if>
+            <if test="parentName != null"> and type.name like concat('%', #{parentName}, '%')</if>
             <if test="description != null"> and description= #{description}</if>
             <if test="img != null"> and img= #{img}</if>
             <if test="typeId != null"> and type_id= #{typeId}</if>

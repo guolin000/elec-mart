@@ -2,6 +2,7 @@
   <div>
     <div class="search">
       <el-input placeholder="请输入分类名称查询" style="width: 200px" v-model="name"></el-input>
+      <el-input placeholder="请输入父类名称查询" style="width: 200px;margin-left: 6px" v-model="parentName"></el-input>
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
@@ -16,15 +17,15 @@
         <el-table-column prop="id" label="序号" width="80" align="center" sortable></el-table-column>
         <el-table-column prop="name" label="分类名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="description" label="分类描述" show-overflow-tooltip></el-table-column>
-        <el-table-column label="分类图标">
-          <template v-slot="scope">
-            <div style="display: flex; align-items: center">
-              <el-image style="width: 40px; height: 40px; " v-if="scope.row.img"
-                        :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="typeId" label="父类" show-overflow-tooltip></el-table-column>
+<!--        <el-table-column label="分类图标">-->
+<!--          <template v-slot="scope">-->
+<!--            <div style="display: flex; align-items: center">-->
+<!--              <el-image style="width: 40px; height: 40px; " v-if="scope.row.img"-->
+<!--                        :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>-->
+<!--            </div>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+        <el-table-column prop="parentName" label="父类名称" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template v-slot="scope">
             <el-button plain type="primary" @click="handleEdit(scope.row)" size="mini">编辑</el-button>
@@ -55,17 +56,17 @@
         <el-form-item prop="description" label="分类描述">
           <el-input v-model="form.description" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="分类图标">
-          <el-upload
-              class="avatar-uploader"
-              :action="$baseUrl + '/files/upload'"
-              :headers="{ token: user.token }"
-              list-type="picture"
-              :on-success="handleAvatarSuccess"
-          >
-            <el-button type="primary">上传图标</el-button>
-          </el-upload>
-        </el-form-item>
+<!--        <el-form-item label="分类图标">-->
+<!--          <el-upload-->
+<!--              class="avatar-uploader"-->
+<!--              :action="$baseUrl + '/files/upload'"-->
+<!--              :headers="{ token: user.token }"-->
+<!--              list-type="picture"-->
+<!--              :on-success="handleAvatarSuccess"-->
+<!--          >-->
+<!--            <el-button type="primary">上传图标</el-button>-->
+<!--          </el-upload>-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="fromVisible = false">取 消</el-button>
@@ -87,6 +88,7 @@ export default {
       pageSize: 10,  // 每页显示的个数
       total: 0,
       name: null,
+      parentName: null,
       fromVisible: false,
       form: {},
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
@@ -168,6 +170,7 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           name: this.name,
+          parentName: this.parentName,
         }
       }).then(res => {
         this.tableData = res.data?.list
@@ -176,6 +179,7 @@ export default {
     },
     reset() {
       this.name = null
+      this.parentName = null
       this.load(1)
     },
     handleCurrentChange(pageNum) {
