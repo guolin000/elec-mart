@@ -50,8 +50,16 @@
         <el-form-item prop="username" label="收货人">
           <el-input v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item prop="useraddress" label="收货地址">
-          <el-input v-model="form.useraddress" autocomplete="off"></el-input>
+        <el-form-item prop="useraddress1" label="选择地址">
+          <el-cascader
+              size="large"
+              :options="pcaTextArr"
+              v-model="form.useraddress1"
+              autocomplete="off">
+          </el-cascader>
+        </el-form-item>
+        <el-form-item prop="useraddress2" label="详细地址">
+          <el-input v-model="form.useraddress2" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="phone" label="联系电话">
           <el-input v-model="form.phone" autocomplete="off"></el-input>
@@ -70,11 +78,16 @@
 import * as animationData from "@/assets/定位.json";
 import LottieAnimation from "@/components/LottieAnimation";
 import Lottie from "lottie-web";
+import { pcaTextArr } from 'element-china-area-data'
 
 export default {
 
+
   data() {
     return {
+      pcaTextArr,
+      selectedOptions: [],
+
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       addressData: [],
       pageNum: 1,   // 当前的页码
@@ -86,8 +99,11 @@ export default {
         username: [
           {required: true, message: '请输入收货人', trigger: 'blur'},
         ],
-        useraddress: [
-          {required: true, message: '请输入收货地址', trigger: 'blur'},
+        useraddress1:[
+          {required: true, message: '请选择地址', trigger: 'blur'},
+        ],
+        useraddress2: [
+          {required: true, message: '请输入详细地址', trigger: 'blur'},
         ],
         phone: [
           {required: true, message: '请输入联系电话', trigger: 'blur'},
@@ -122,7 +138,9 @@ mounted() {
       this.form = JSON.parse(JSON.stringify(row))
       this.formVisible = true
     },
-    save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
+    save() {
+      this.form.useraddress = this.form.useraddress1 + this.form.useraddress2
+      // 保存按钮触发的逻辑  它会触发新增或者更新
       this.$refs.formRef.validate((valid) => {
         if (valid) {
           this.form.userId = this.user.id
