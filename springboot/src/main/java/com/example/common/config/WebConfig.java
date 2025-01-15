@@ -26,6 +26,7 @@ public class WebConfig implements  WebMvcConfigurer {
                 .excludePathPatterns("/goods/**")
                 .excludePathPatterns("/comment/selectByGoodsId/**")
                 .excludePathPatterns(("/alipay/**"))
+                .excludePathPatterns(("/seckillalipay/**"))
         ;
     }
 }
