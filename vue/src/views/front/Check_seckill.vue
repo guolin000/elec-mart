@@ -233,7 +233,7 @@ export default {
           this.$message.success('操作成功')
           this.orderNo=res.data
           console.log("orderNo:"+this.orderNo);
-          window.open('http://localhost:9090/alipay/pay?orderNo=' + this.orderNo)
+          window.open('http://localhost:9090/seckillalipay/pay?orderNo=' + this.orderNo)
         } else {
           this.$message.error(res.msg)
         }
