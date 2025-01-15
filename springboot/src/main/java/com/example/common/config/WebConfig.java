@@ -19,6 +19,8 @@ public class WebConfig implements  WebMvcConfigurer {
                 .excludePathPatterns("/")
                 .excludePathPatterns("/login")
                 .excludePathPatterns("/register")
+                .excludePathPatterns("/api/send-code")  // 放行 /api/send-code 接口
+                .excludePathPatterns("/api/register")   // 放行 /api/register 接口
                 .excludePathPatterns("/files/**")
                 .excludePathPatterns("/type/**")
                 .excludePathPatterns("/notice/selectAll")

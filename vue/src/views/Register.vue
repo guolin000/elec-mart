@@ -9,16 +9,55 @@
         <div class="register-title">欢迎注册</div>
         <el-form :model="form" :rules="rules" ref="formRef">
           <el-form-item prop="username">
-            <el-input prefix-icon="el-icon-user" placeholder="请输入账号" v-model="form.username"></el-input>
+            <el-input
+                prefix-icon="el-icon-user"
+                placeholder="请输入账号"
+                v-model="form.username"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input prefix-icon="el-icon-lock" placeholder="请输入密码" show-password v-model="form.password"></el-input>
+            <el-input
+                prefix-icon="el-icon-lock"
+                placeholder="请输入密码"
+                show-password
+                v-model="form.password"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="confirmPass">
-            <el-input prefix-icon="el-icon-lock" placeholder="请确认密码" show-password v-model="form.confirmPass"></el-input>
+            <el-input
+                prefix-icon="el-icon-lock"
+                placeholder="请确认密码"
+                show-password
+                v-model="form.confirmPass"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="email">
+            <el-input
+                prefix-icon="el-icon-message"
+                placeholder="请输入邮箱"
+                v-model="form.email"
+            ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-select v-model="form.role" placeholder="请选择角色" style="width: 100%">
+            <el-input
+                prefix-icon="el-icon-message"
+                placeholder="请输入邮箱验证码"
+                v-model="form.verificationCode"
+            ></el-input>
+            <el-button
+                @click="sendVerificationCode"
+                type="primary"
+                :disabled="isCodeSent"
+            >
+              {{ isCodeSent ? `${countdown}s 后重新发送` : "发送验证码" }}
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-select
+                v-model="form.role"
+                placeholder="请选择角色"
+                style="width: 100%"
+            >
               <el-option label="商家" value="BUSINESS"></el-option>
               <el-option label="用户" value="USER"></el-option>
             </el-select>
@@ -41,6 +80,17 @@ import lottie from "lottie-web";
 export default {
   name: "Register",
   data() {
+    const validateEmail = (rule, value, callback) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!value) {
+        callback(new Error("请输入邮箱"));
+      } else if (!emailRegex.test(value)) {
+        callback(new Error("请输入正确的邮箱格式"));
+      } else {
+        callback();
+      }
+    };
+
     const validatePassword = (rule, confirmPass, callback) => {
       if (confirmPass === "") {
         callback(new Error("请确认密码"));
@@ -50,13 +100,27 @@ export default {
         callback();
       }
     };
+
     return {
-      form: {},
+      form: {
+        username: "",
+        password: "",
+        confirmPass: "",
+        email: "",
+        role: "",
+        verificationCode: "",
+      },
       rules: {
         username: [{ required: true, message: "请输入账号", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
         confirmPass: [{ validator: validatePassword, trigger: "blur" }],
+        email: [{ validator: validateEmail, trigger: "blur" }],
+        verificationCode: [
+          { required: true, message: "请输入验证码", trigger: "blur" },
+        ],
       },
+      isCodeSent: false,
+      countdown: 60,
     };
   },
   mounted() {
@@ -69,17 +133,57 @@ export default {
     });
   },
   methods: {
-    register() {
-      this.$refs["formRef"].validate((valid) => {
-        if (valid) {
-          this.$request.post("/register", this.form).then((res) => {
+    // 发送验证码请求
+    sendVerificationCode() {
+      if (!this.form.email) {
+        this.$message.error("请先输入邮箱");
+        return;
+      }
+      this.$request
+          .post("/api/send-code", { email: this.form.email })
+          .then((res) => {
             if (res.code === "200") {
-              this.$router.push("/"); // 跳转登录页面
-              this.$message.success("注册成功");
+              this.$message.success("验证码已发送，请注意查收");
+              this.startCountdown();
             } else {
               this.$message.error(res.msg);
             }
+          })
+          .catch((error) => {
+            console.error("发送验证码失败:", error);
+            this.$message.error("发送验证码失败，请稍后重试");
           });
+    },
+    // 启动倒计时
+    startCountdown() {
+      this.isCodeSent = true;
+      this.countdown = 60;
+      const timer = setInterval(() => {
+        this.countdown--;
+        if (this.countdown <= 0) {
+          clearInterval(timer);
+          this.isCodeSent = false;
+        }
+      }, 1000);
+    },
+    // 注册请求
+    register() {
+      this.$refs["formRef"].validate((valid) => {
+        if (valid) {
+          this.$request
+              .post("/api/register", this.form)
+              .then((res) => {
+                if (res.code === "200") {
+                  this.$router.push("/login"); // 跳转登录页面
+                  this.$message.success("注册成功");
+                } else {
+                  this.$message.error(res.msg);
+                }
+              })
+              .catch((error) => {
+                console.error("注册失败:", error);
+                this.$message.error("注册失败，请稍后重试");
+              });
         }
       });
     },

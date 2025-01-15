@@ -23,7 +23,17 @@ spring:
         max-wait: -1
         max-idle: 8
         min-idle: 0
-
+  mail:
+    host: smtp.qq.com                # QQ 邮箱 SMTP 服务器地址
+    port: 465                        # SMTP 端口号（SSL）
+    username: 1803573449@qq.com      # 发件人邮箱
+    password: dffjphcblradbdcd         # QQ 邮箱授权码
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
 # 配置mybatis实体和xml映射
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -60,3 +70,5 @@ alipay:
   alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAh1nDqiO91UFWCmKCgPBd5URVnSYNJmenQE25WuwMiZmFoauDbIYgi8ZppdDGGYiYiUPZtvaUS9s/q/5Kf9lnksYROddBPrmG8Wz9JmlXgQaEf4jurZyoXrabxLHiTSVR1BjAG+0BodNIHegnenUyMSYsLhXQGsxqSCT7lP2LZLgOtl/sjEk1KRzWgJqvBEb7HyKPmK8qHBjiU203NKRtrPlb7DzielJ/W3WExZN+WTmS+2sUZeqg3OgZwG4SvFSclbPzpMvQKe/fo/n7mF/yijvx56lNRkYToAESzpGzdv6fHuy8/M4/Z03N9wxM4GLGF5dlGrvoTd6mbRHCo1hsqwIDAQAB
   notifyUrl: http://v5zj6g.natappfree.cc/alipay/notify
 #  returnUrl: http://a24wuy.natappfree.cc/api/alipay/notify
+
+
