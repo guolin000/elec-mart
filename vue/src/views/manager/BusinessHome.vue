@@ -95,11 +95,23 @@ export default {
     };
   },
   mounted() {
-    this.fetchTableData();
     this.fetchUserStats();
     this.fetchProductStats();
+    // 每 5 分钟调用一次 fetchCardData
+    this.intervalId = setInterval(this.fetchCardData, 5 * 60 * 1000);
+    this.intervalId2 = setInterval(this.getDateRanges, 5 * 60 * 1000);
+    // 立即调用一次，确保页面加载时数据是最新的
     this.fetchCardData();
     this.getDateRanges();
+  },
+  beforeDestroy() {
+    // 清除定时器
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+    if (this.intervalId2) {
+      clearInterval(this.intervalId2);
+    }
   },
   methods: {
      fetchProductStats() {
@@ -275,7 +287,9 @@ export default {
     fetchCardData() {
       const today = new Date();
       const yestDay = new Date(today);
-      yestDay.setDate(today.getDate() - 1);
+      yestDay.setDate(today.getDate()-1);
+      console.log("today" + today);
+      console.log("yesterday " + yestDay);
       this.$request.get(`/orders/getOrderData`, {
         params: {
           merchantId:this.user.id,
@@ -291,17 +305,6 @@ export default {
         console.error("Failed to fetch chart data:", error);
         this.$message.error("数据获取失败，请重试！");
       })
-    },
-    fetchTableData() {
-      const dataFromAPI = [
-        { a1: '待付款订单', a2: 10, a3: '已完成订单', a4: 10 },
-        { a1: '待发货订单', a2: 20, a3: '新缺货登记', a4: 10 },
-        { a1: '已发货订单', a2: 10, a3: '待处理退货订单', a4: 20 }
-      ];
-      this.tableData = dataFromAPI;
-    },
-    isNumber(value) {
-      return typeof value === 'number';
     },
     fetchChartData(dateRange) {
         // 构造请求 URL 和参数
