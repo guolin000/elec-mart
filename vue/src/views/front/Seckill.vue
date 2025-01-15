@@ -2,7 +2,16 @@
   <div class="main-content">
     <div style="display: flex; width: 70%; background-color: white; margin: 30px auto; border-radius: 20px">
       <div style="flex: 1; padding: 0 20px">
-        <div style="font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid">秒杀专区</div>
+        <div class="section-container">
+          <lottie-animation
+              :animation-data="animationData"
+              :loop="true"
+              :autoplay="true"
+              style="width:80px; height:80px;"
+          ></lottie-animation>
+          <div style="font-size: 22px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid;font-weight: bolder">秒杀专区</div>
+
+        </div>
         <div style="margin: 20px 0">
           <el-row :gutter="20">
             <el-col :span="6" style="margin-bottom: 20px" v-for="item in seckillData" :key="item.id">
@@ -37,15 +46,33 @@
 
 <script>
 
+import * as animationData from "@/assets/清仓.json";
+import LottieAnimation from "@/components/LottieAnimation";
+import Lottie from "lottie-web";
+
 export default {
 
   data() {
     return {
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       seckillData: [],
+      animationData
     }
   },
+  components: {
+    LottieAnimation,
+  },
   mounted() {
+    this.$nextTick(() => {
+      // 初始化 Lottie 动画
+      const lottieInstance = Lottie.loadAnimation({
+        container: this.$refs.lottieContainer,
+        renderer: 'svg',
+        loop: this.lottieOptions.loop,
+        autoplay: this.lottieOptions.autoplay,
+        animationData: this.lottieOptions.animationData,
+      });
+    });
     this.loadseckill()
   },
   // methods：本页面所有的点击事件或者其他函数定义区
@@ -75,3 +102,23 @@ export default {
   }
 }
 </script>
+<style scoped>
+.section-container {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  /*justify-content:space-between ; !* 水平间距 *!*/
+  /*margin: 40px 0 0 15px; !* 上外边距 *!*/
+}
+
+.section-title {
+  height: 40px;
+  background-color: #04BF04FF;
+  font-size: 20px;
+  color: white;
+  width: 130px;
+  font-weight: bold;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
+}
+</style>
