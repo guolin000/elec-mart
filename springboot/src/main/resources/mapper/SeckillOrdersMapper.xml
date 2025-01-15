@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.SeckillOrdersMapper">
+
+    <sql id="Base_Column_List">
+        id,user_id,business_id,goods_id,num,price,address_id,status,order_id
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.SeckillOrders">
+        select seckillorders.*, business.name as businessName, goods.img as goodsImg, goods.name as goodsName, goods.price as goodsPrice, goods.unit as goodsUnit,
+        address.username as username, address.useraddress as useraddress, address.phone as phone
+        from seckillorders
+        left join business on seckillorders.business_id = business.id
+        left join goods on seckillorders.goods_id = goods.id
+        left join address on seckillorders.address_id = address.id
+        <where>
+            <if test="id != null"> and id= #{id}</if>
+            <if test="userId != null"> and seckillorders.user_id = #{userId}</if>
+            <if test="businessId != null"> and seckillorders.business_id = #{businessId}</if>
+            <if test="goodsId != null"> and goods_id = #{goodsId}</if>
+            <if test="num != null"> and num = #{num}</if>
+            <if test="price != null"> and price = #{price}</if>
+            <if test="addressId != null"> and address_id = #{addressId}</if>
+            <if test="status != null"> and status = #{status}</if>
+            <if test="orderId != null"> and order_id = #{orderId}</if>
+        </where>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.SeckillOrders">
+        select
+        <include refid="Base_Column_List" />
+        from seckillorders
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from seckillorders
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.SeckillOrders" useGeneratedKeys="true" keyProperty="id">
+        insert into seckillorders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="businessId != null">business_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="num != null">num,</if>
+            <if test="price != null">price,</if>
+            <if test="addressId != null">address_id,</if>
+            <if test="status != null">status,</if>
+            <if test="orderId != null">order_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="businessId != null">#{businessId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="price != null">#{price},</if>
+            <if test="addressId != null">#{addressId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="orderId != null">#{orderId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.SeckillOrders">
+        update seckillorders
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="businessId != null">
+                business_id = #{businessId},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="addressId != null">
+                address_id = #{addressId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateStatusById">update seckillorders set status = "待发货" where id = #{id}</update>
+
+    <!-- 查询商家在指定日期的订单总数 -->
+    <select id="selectOrderCountByMerchantIdAndDate" resultType="int">
+        SELECT COUNT(*)
+        FROM seckillorders
+        WHERE business_id = #{merchantId}
+        AND DATE(order_time) = #{date}  <!-- 使用精确日期匹配 -->
+    </select>
+
+    <!-- 查询商家在指定日期的订单总额 -->
+    <select id="selectAmountByMerchantIdAndDate" resultType="double">
+        SELECT SUM(price)
+        FROM seckillorders
+        WHERE business_id = #{merchantId}
+        AND DATE(order_time) = #{date}  <!-- 使用 DATE() 函数忽略时间部分 -->
+    </select>
+
+    <!-- 根据商家id和日期范围查询订单总数 -->
+    <select id="getTotalOrderCountByMerchantIdAndDate" resultType="int">
+        SELECT COUNT(*)
+        FROM seckillorders
+        WHERE business_id = #{merchantId}
+          AND order_time BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <!-- 根据商家id和日期范围查询订单总额 -->
+    <select id="getTotalAmountByMerchantIdAndDate" resultType="double">
+        SELECT SUM(price)
+        FROM seckillorders
+        WHERE business_id = #{merchantId}
+          AND order_time BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+
+</mapper>

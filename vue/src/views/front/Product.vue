@@ -83,11 +83,11 @@ export default {
     },
     addCart() {
       let data = {num: 1, userId: this.user.id, goodsId: this.goodsData.goodsId, businessId: this.goodsData.businessId}
-      this.$request.post('/cart/add', data).then(res => {
+      this.$request.post('/seckillcart/add', data).then(res => {
         if (res.code === '200') {
           this.$message.success('生成订单')
         } else {
-          this.$message.error(res.msg)
+          this.$message.success(res.msg)
         }
       })
     },
@@ -95,7 +95,7 @@ export default {
       this.addCart()
       console.log(this.goodsData.goodsId)
       this.$router.push({
-        name: 'Check',
+        name: 'Check_seckill',
         query: { buyGoodsId: this.goodsData.goodsId }
       });
 

@@ -5,9 +5,9 @@
         <div style="display: flex; font-size: 18px; color: #000000FF; line-height: 80px; border-bottom: #cccccc 1px solid;">
           <div style="margin-left: 20px; flex: 1">订单结算</div>
 
-<!--          <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">-->
-<!--            <el-button type="danger" style=" font-size: 18px;" round @click="dayin">test</el-button>-->
-<!--          </div>-->
+          <!--          <div style="flex: 1; font-size: 16px; text-align: right; padding-right: 40px">-->
+          <!--            <el-button type="danger" style=" font-size: 18px;" round @click="dayin">test</el-button>-->
+          <!--          </div>-->
 
 
           <div style="flex: 2; text-align: right; padding-right: 40px">
@@ -53,18 +53,18 @@
         </div>
 
         <div style="display: flex; font-size: 18px; color: #000000FF; line-height: 80px; ">
-            <div style="flex: 1; font-size: 20px; text-align: left; padding-left: 100px">
+          <div style="flex: 1; font-size: 20px; text-align: left; padding-left: 100px">
             <span style="padding-right: 30px">付款方式 : </span>
-                <el-radio-group v-model="selectedValue" style="transform: scale(1.2); font-size: 20px;">
-                      <el-radio label="option1" >支付宝</el-radio>
-<!--                      <el-radio label="option2">余额</el-radio>-->
-                    </el-radio-group>
-            </div>
+            <el-radio-group v-model="selectedValue" style="transform: scale(1.2); font-size: 20px;">
+              <el-radio label="option1" >支付宝</el-radio>
+              <!--                      <el-radio label="option2">余额</el-radio>-->
+            </el-radio-group>
+          </div>
 
-                  <div style="flex: 2; font-size: 20px; text-align: right; padding-right: 40px">
-                    共计 ￥   {{totalPrice}}    <el-button type="danger" style=" font-size: 18px;" round @click="pay">支付</el-button>
-                  </div>
-                </div>
+          <div style="flex: 2; font-size: 20px; text-align: right; padding-right: 40px">
+            共计 ￥   {{totalPrice}}    <el-button type="danger" style=" font-size: 18px;" round @click="pay">支付</el-button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -93,8 +93,8 @@ export default {
     }
   },
   mounted() {
-    this.loadGoods()
-    this.loadAddress()
+    this.loadGoods();
+    this.loadAddress();
   },
   // methods：本页面所有的点击事件或者其他函数定义区
   methods: {
@@ -108,56 +108,54 @@ export default {
       })
     },
     loadGoods() {
-            this.goodsId=Number(this.$route.query.buyGoodsId)
-            if(this.goodsId!=null && !Number.isNaN(this.goodsId)){
+      this.goodsId=Number(this.$route.query.buyGoodsId)
+      if(this.goodsId!=null && !Number.isNaN(this.goodsId)){
 
-                // console.log(this.goodsId)
-                this.$request.get('/cart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
-                      if (res.code === '200') {
-                        // console.table(res.data)
-                        this.goodsData = res.data
-                        // console.table(this.goodsData)
-                        //计算总价
-                        this.totalPrice = 0
-                        this.goodsData.forEach(item => {
-                          // console.log("111")
-                          // console.log( item.num)
-                          this.totalPrice = item.goodsPrice * item.num
-                        })
-                      } else {
-                         this.$message.error(res.msg)
-                      }
-                })
+        //console.log(this.goodsId)
+        this.$request.get('/seckillcart/selectByGoodsId?goodsId=' + this.goodsId).then(res => {
+          if (res.code === '200') {
+            console.log(res.data)
+            this.goodsData = res.data
+            // console.table(this.goodsData)
+            //计算总价
+            this.totalPrice = 0
+            this.goodsData.forEach(item => {
+              // console.log("111")
+              // console.log( item.num)
+              this.totalPrice = item.goodsPrice * item.num
+            })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
 
 
-            }
-            else{
-                const selectedData = this.$route.query.selectedData;
-                if (selectedData) {
-                    this.goodsData = JSON.parse(selectedData);
-                }
-                console.table(this.goodsData)
-              //计算总价
-                this.totalPrice = 0
-                this.goodsData.forEach(item => {
-                    console.log("111")
-                    console.log( item.goodsPrice)
-                    this.totalPrice += item.goodsPrice * item.num
-                })
+      }
+      else{
+        const selectedData = this.$route.query.selectedData;
+        if (selectedData) {
+          this.goodsData = JSON.parse(selectedData);
+        }
+        console.table(this.goodsData)
+        //计算总价
+        this.totalPrice = 0
+        this.goodsData.forEach(item => {
+          console.log("111")
+          console.log( item.goodsPrice)
+          this.totalPrice += item.goodsPrice * item.num
+        })
 
-            }
+      }
       // console.table(this.goodsData)
-    //计算总价
-    //                   this.totalPrice = 0
-    //                         this.goodsData.forEach(item => {
-    //                           console.log("111")
-    //                         console.log( item.goodsPrice)
-    //                         this.totalPrice += item.goodsPrice * item.num
-    //                   })
+      //计算总价
+      //                   this.totalPrice = 0
+      //                         this.goodsData.forEach(item => {
+      //                           console.log("111")
+      //                         console.log( item.goodsPrice)
+      //                         this.totalPrice += item.goodsPrice * item.num
+      //                   })
 
-
-
-        },
+    },
 
     dayin(){
       console.table(this.goodsData)
@@ -168,7 +166,7 @@ export default {
       location.href = url
     },
     del(id) {
-      this.$request.delete('/cart/delete/' + id).then(res => {
+      this.$request.delete('/seckillcart/delete/' + id).then(res => {
         if (res.code === '200') {
           this.$message.success('移除成功')
           this.loadGoods(1)
@@ -228,7 +226,7 @@ export default {
         cartData: this.goodsData,
         price: this.totalPrice
       }
-      this.$request.post('/orders/add', data).then(res => {
+      this.$request.post('/seckillorders/add', data).then(res => {
         if (res.data !== null) {
           console.log("res.data:"+res.data)
           this.$message.success('操作成功')

@@ -64,6 +64,7 @@ public class SeckillService {
 
     // 秒杀业务逻辑
     public String seckill(Long seckillId, Integer userId) {
+        initSeckillStock();
         // 获取当前时间
         LocalDateTime currentTime = LocalDateTime.now();
         System.out.println("测试：" + currentTime);
