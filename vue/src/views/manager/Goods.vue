@@ -2,6 +2,10 @@
   <div>
     <div class="search">
       <el-input placeholder="请输入商品名称查询" style="width: 200px" v-model="name"></el-input>
+      <el-input placeholder="请输入商家名称查询" style="width: 200px;margin-left: 6px" v-model="businessName"></el-input>
+      <el-input placeholder="请输入商品类别" style="width: 200px;margin-left: 6px" v-model="typeName"></el-input>
+
+
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
@@ -124,6 +128,8 @@ export default {
       pageSize: 10,  // 每页显示的个数
       total: 0,
       name: null,
+      businessName: null,  // 新增商家名称字段
+      typeName: null,
       fromVisible: false,
       editorVisible: false,
       form: {},
@@ -238,16 +244,22 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           name: this.name,
+          businessName: this.businessName,  // 商家名称
+          typeName: this.typeName,  // 商家名称
         }
       }).then(res => {
         this.tableData = res.data?.list
         this.total = res.data?.total
       })
     },
+    // 重置查询条件
     reset() {
-      this.name = null
+      this.name = null;
+      this.businessName=null
+      this.typeName=null
       this.load(1)
     },
+    // 当前页变化时加载数据
     handleCurrentChange(pageNum) {
       this.load(pageNum)
     },

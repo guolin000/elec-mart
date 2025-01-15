@@ -16,6 +16,8 @@
         <where>
             <if test="id != null"> and id= #{id}</if>
             <if test="name != null"> and goods.name like concat('%', #{name}, '%')</if>
+            <if test="businessName != null"> and business.name like concat('%', #{businessName}, '%')</if>  <!-- 关键字查询商家名称 -->
+            <if test="typeName != null"> and second_type.name like concat('%', #{typeName}, '%')</if>  <!-- 关键字商品类别名称 -->
             <if test="description != null"> and description= #{description}</if>
             <if test="img != null"> and img= #{img}</if>
             <if test="price != null"> and price= #{price}</if>
