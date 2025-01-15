@@ -437,9 +437,6 @@ export default {
       // 更新 tableData
       this.tableData = filteredData;
 
-      // 更新总条数
-      this.total = filteredData.length;
-
       // 重置页码
       this.pageNum = 1;
     },
