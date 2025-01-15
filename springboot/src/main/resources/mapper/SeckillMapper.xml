@@ -4,6 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.SeckillMapper">
 
+    <insert id="insert" parameterType="com.example.entity.Seckill" useGeneratedKeys="true" keyProperty="seckillId">
+        insert into seckill
+        (goods_id, seckill_price, seckill_num, seckill_begin, seckill_end)
+        VALUES (#{goodsId}, #{seckillPrice}, #{seckillNum}, #{seckillBegin},#{seckillEnd})
+    </insert>
+
     <!-- 根据秒杀ID获取秒杀商品信息 -->
     <select id="getSeckillBySeckillId" resultType="com.example.entity.SeckillGoods">
         SELECT

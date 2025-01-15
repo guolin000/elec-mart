@@ -1,8 +1,13 @@
 package com.example.service;
 
+import cn.hutool.core.date.DateTime;
+import com.example.common.enums.RoleEnum;
+import com.example.entity.Account;
+import com.example.entity.Goods;
 import com.example.entity.Seckill;
 import com.example.entity.SeckillGoods;
 import com.example.mapper.SeckillMapper;
+import com.example.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -11,6 +16,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -133,6 +139,25 @@ public class SeckillService {
         } finally {
             // 释放锁
             redisTemplate.delete(lockKey);
+        }
+    }
+
+    public void addSeckillProducts(List<Integer> goodsId, DateTime seckillBegin, DateTime seckillEnd, Double seckillPrice, Integer seckillNum) {
+
+        Seckill seckill = new Seckill();
+        for (Integer id : goodsId) {
+            // 对每个 id 执行操作
+            System.out.println("商品ID: " + id);
+
+            // 你可以在这里使用 id 创建相应的 seckill 实例，或者做其他处理
+            seckill.setGoodsId(id);
+            seckill.setSeckillBegin(seckillBegin);
+            seckill.setSeckillEnd(seckillEnd);
+            seckill.setSeckillPrice(seckillPrice);
+            seckill.setSeckillNum(seckillNum);
+
+            // 执行插入操作
+            seckillMapper.insert(seckill);
         }
     }
 

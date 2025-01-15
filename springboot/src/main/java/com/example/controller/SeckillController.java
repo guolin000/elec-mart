@@ -1,13 +1,16 @@
 package com.example.controller;
 
+import cn.hutool.core.date.DateTime;
 import com.example.common.Result;
 import com.example.entity.Seckill;
 import com.example.entity.SeckillGoods;
 import com.example.service.SeckillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -18,10 +21,20 @@ public class SeckillController {
     private SeckillService seckillService;
 
     // 获取所有秒杀商品
-    @GetMapping("/products_s")
-    public Result getAllSeckillProducts() {
-        List<Seckill> res = seckillService.getAllSeckillProducts();
-        return Result.success(res);
+    @PostMapping("/add")
+    public Result addSeckillProducts(
+            @RequestParam("goodsId") List<Integer> goodsId,
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") DateTime startDate,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") DateTime endDate,
+            @RequestParam("price") Double price,
+            @RequestParam("num") Integer num){
+
+        System.out.println("goodsId: " + goodsId);
+        System.out.println("startDate: " + startDate);
+        System.out.println("endDate: " + endDate);
+
+        seckillService.addSeckillProducts(goodsId, startDate, endDate, price, num);
+        return Result.success();
     }
 
     // 获取所有秒杀商品
