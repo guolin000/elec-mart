@@ -19,11 +19,18 @@ public class SecondTypeService {
 
     @Resource
     private SecondTypeMapper secondTypeMapper;
+    public boolean isNameExist(String name) {
+        return secondTypeMapper.countByName(name) > 0;
+    }
 
     /**
      * 新增
      */
     public void add(SecondType secondType) {
+        // 判断分类名称是否已经存在
+        if (isNameExist(secondType.getName())) {
+            throw new IllegalArgumentException("分类名称已经存在");
+        }
         secondTypeMapper.insert(secondType);
         System.out.println(secondType);
     }

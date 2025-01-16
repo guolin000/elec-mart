@@ -26,7 +26,6 @@ public class SecondTypeController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody SecondType secondType) {
-        System.out.println("dawdawdawdawda"+secondType.getTypeId());
         secondTypeService.add(secondType);
         return Result.success();
     }

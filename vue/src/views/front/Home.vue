@@ -98,12 +98,12 @@
           ></lottie-animation>
           <div class="section-title">热卖商品</div>
         </div>
-        <div style="margin: 10px 5px 0 5px;background: #f5f7fa;">
+        <div style="margin: 10px 5px 0 5px;background: #f5f7fa;font-family: 华文仿宋;font-weight: bolder">
           <el-row>
             <el-col :span="5" v-for="item in goodsData">
               <img @click="navTo('/front/detail?id=' + item.id)" :src="item.img" alt="" style="width: 100%; height: 175px; border-radius: 10px; border: #cccccc 1px solid">
               <div style="margin-top: 10px; font-weight: 500; font-size: 16px; width: 180px; color: #000000FF; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{item.name}}</div>
-              <div style="margin-top: 5px; font-size: 20px; color: #FF5000FF">￥ {{item.price}} / {{item.unit}}</div>
+              <div style="margin-top: 5px; font-size: 20px; color: #FF5000FF;">￥ {{item.price}} / {{item.unit}}</div>
             </el-col>
           </el-row>
         </div>

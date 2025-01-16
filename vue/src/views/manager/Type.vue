@@ -56,17 +56,17 @@
         <el-form-item prop="description" label="分类描述">
           <el-input v-model="form.description" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="分类图标">
-          <el-upload
-              class="avatar-uploader"
-              :action="$baseUrl + '/files/upload'"
-              :headers="{ token: user.token }"
-              list-type="picture"
-              :on-success="handleAvatarSuccess"
-          >
-            <el-button type="primary">上传图标</el-button>
-          </el-upload>
-        </el-form-item>
+<!--        <el-form-item label="分类图标">-->
+<!--          <el-upload-->
+<!--              class="avatar-uploader"-->
+<!--              :action="$baseUrl + '/files/upload'"-->
+<!--              :headers="{ token: user.token }"-->
+<!--              list-type="picture"-->
+<!--              :on-success="handleAvatarSuccess"-->
+<!--          >-->
+<!--            <el-button type="primary">上传图标</el-button>-->
+<!--          </el-upload>-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="fromVisible = false">取 消</el-button>
