@@ -16,6 +16,7 @@
             </el-select>
           </div>
 
+
         </div>
 
 
@@ -61,10 +62,24 @@
                     </el-radio-group>
             </div>
 
+<!--          <div style="flex: 2; text-align: right; padding-right: 40px">-->
+<!--            收货地址：-->
+<!--            <el-radio-group v-model="addressId" style="display: flex; flex-direction: column; gap: 10px;">-->
+<!--              <el-radio-->
+<!--                  v-for="item in addressData"-->
+<!--                  :label="item.id"-->
+<!--                  :key="item.id"-->
+<!--                  :value="item.id">-->
+<!--                {{ item.username + ' - ' + item.useraddress + ' - ' + item.phone }}-->
+<!--              </el-radio>-->
+<!--            </el-radio-group>-->
+<!--          </div>-->
+
                   <div style="flex: 2; font-size: 20px; text-align: right; padding-right: 40px">
                     共计 ￥   {{totalPrice}}    <el-button type="danger" style=" font-size: 18px;" round @click="pay">支付</el-button>
                   </div>
-                </div>
+
+        </div>
       </div>
     </div>
   </div>
@@ -102,6 +117,9 @@ export default {
       this.$request.get('/address/selectAll').then(res => {
         if (res.code === '200') {
           this.addressData = res.data
+          if (this.addressData.length > 0) {
+            this.addressId = this.addressData[0].id;  // 设置默认地址ID
+          }
         } else {
           this.$message.error(res.msg)
         }
