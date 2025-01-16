@@ -6,6 +6,7 @@ import com.example.service.GoodsService;
 import com.example.utils.GoodsToggleBatchDTO;
 import com.example.utils.GoodsToggleDTO;
 import com.github.pagehelper.PageInfo;
+import io.swagger.models.auth.In;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -61,6 +62,42 @@ public class GoodsController {
         goodsService.toggleUpBatch(dto);
         return Result.success();
     }
+    /**
+     * 审核通过（单个商品）
+     */
+    @PutMapping("/approve/{id}")
+    public Result approve(@PathVariable("id") Integer id) {
+        goodsService.approve(id);
+        return Result.success("审核通过");
+    }
+
+    /**
+     * 批量审核通过
+     */
+    @PutMapping("/approveBatch")
+    public Result approveBatch(@RequestBody List<Integer> ids) {
+        goodsService.approveBatch(ids);
+        return Result.success("批量审核通过");
+    }
+
+    /**
+     * 审核拒绝（单个商品）
+     */
+    @PutMapping("/reject/{id}")
+    public Result reject(@PathVariable("id") Integer id) {
+        goodsService.reject(id);
+        return Result.success("审核已拒绝");
+    }
+
+    /**
+     * 批量审核拒绝
+     */
+    @PutMapping("/rejectBatch")
+    public Result rejectBatch(@RequestBody List<Integer> ids) {
+        goodsService.rejectBatch(ids);
+        return Result.success("批量审核拒绝成功");
+    }
+
     /**
      * 修改
      */

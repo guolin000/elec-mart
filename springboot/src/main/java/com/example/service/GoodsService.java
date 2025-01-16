@@ -244,4 +244,24 @@ public class GoodsService {
         stats.put("a4", goodsMapper.count(id));  // 全部商品
         return stats;
     }
+
+    // 审核通过（单个商品）
+    public void approve(Integer id) {
+        goodsMapper.updateGoodsStatus(id, "审核通过");
+    }
+
+    // 批量审核通过
+    public void approveBatch(List<Integer> ids) {
+        goodsMapper.updateGoodsStatusBatch(ids, "审核通过");
+    }
+
+    // 审核拒绝（单个商品）
+    public void reject(Integer id) {
+        goodsMapper.updateGoodsStatus(id, "审核拒绝");
+    }
+
+    // 批量审核拒绝
+    public void rejectBatch(List<Integer> ids) {
+        goodsMapper.updateGoodsStatusBatch(ids, "审核拒绝");
+    }
 }

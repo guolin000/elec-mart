@@ -77,4 +77,18 @@ public interface GoodsMapper {
 
     @Select("SELECT COUNT(*) FROM goods WHERE business_id = #{id}")
     Long count(@Param("id") Integer id);
+
+    // 更新单个商品状态
+    @Update("UPDATE goods SET status = #{status} WHERE id = #{id};")
+    void updateGoodsStatus(@Param("id") Integer id, @Param("status") String status);
+
+    // 批量更新商品状态
+    @Update("<script>" +
+            "UPDATE goods SET status = #{status} " +
+            "WHERE id IN " +
+            "<foreach item='id' collection='ids' open='(' separator=',' close=')'>" +
+            "#{id}" +
+            "</foreach>" +
+            "</script>")
+    void updateGoodsStatusBatch(@Param("ids") List<Integer> ids, @Param("status") String status);
 }

@@ -5,14 +5,14 @@
       <el-input placeholder="请输入商家名称查询" style="width: 200px;margin-left: 6px" v-model="businessName"></el-input>
       <el-input placeholder="请输入商品类别" style="width: 200px;margin-left: 6px" v-model="typeName"></el-input>
 
-
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
 
     <div class="operation">
-      <el-button type="primary" plain @click="handleAdd">发布商品</el-button>
       <el-button type="danger" plain @click="delBatch">批量删除</el-button>
+      <el-button type="success" plain @click="approveBatch">批量同意</el-button>
+      <el-button type="warning" plain @click="rejectBatch">批量拒绝</el-button>
     </div>
 
     <div class="table">
@@ -34,13 +34,21 @@
           </template>
         </el-table-column>
         <el-table-column prop="price" label="商品价格" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="unit" label="计件单位" show-overflow-tooltip></el-table-column>
         <el-table-column prop="typeName" label="商品分类" show-overflow-tooltip></el-table-column>
         <el-table-column prop="businessName" label="所属商家" show-overflow-tooltip></el-table-column>
         <el-table-column prop="count" label="商品销量" show-overflow-tooltip></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column prop="status" label="商品状态" show-overflow-tooltip></el-table-column>
+        <el-table-column label="审核操作" width="180" align="center">
+          <template v-slot="scope">
+            <el-button plain type="success" @click="approve(scope.row.id)" size="mini">同意</el-button>
+            <el-button plain type="danger" @click="reject(scope.row.id)" size="mini">拒绝</el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" width="240" align="center">
           <template v-slot="scope">
             <el-button plain type="primary" @click="handleEdit(scope.row)" size="mini">编辑</el-button>
+<!--            <el-button plain type="success" size="mini" @click="approve(scope.row.id)">审核</el-button>-->
             <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
           </template>
         </el-table-column>
@@ -58,7 +66,6 @@
         </el-pagination>
       </div>
     </div>
-
 
     <el-dialog title="信息" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close @close="cancel">
       <el-form label-width="100px" style="padding-right: 50px" :model="form" :rules="rules" ref="formRef">
@@ -107,7 +114,7 @@
 import E from 'wangeditor'
 
 let editor
-function initWangEditor(content) {	setTimeout(() => {
+function initWangEditor(content) { setTimeout(() => {
   if (!editor) {
     editor = new E('#editor')
     editor.config.placeholder = '请输入内容'
@@ -194,7 +201,6 @@ export default {
           }).then(res => {
             if (res.code === '200') {  // 表示成功保存
               this.$message.success('保存成功')
-              // this.load(1)
               this.fromVisible = false
               location.href = '/goods'
             } else {
@@ -236,6 +242,66 @@ export default {
         })
       }).catch(() => {
       })
+    },
+    // 单个同意
+    approve(id) {
+      this.$confirm('您确定同意该商品审核吗？', '确认审核', { type: 'success' }).then(() => {
+        this.$request.put(`/goods/approve/${id}`).then(res => {
+          if (res.code === '200') {
+            this.$message.success('审核通过');
+            this.load(this.pageNum);
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
+      }).catch(() => {});
+    },
+    // 单个拒绝
+    reject(id) {
+      this.$confirm('您确定拒绝该商品审核吗？', '确认审核', { type: 'warning' }).then(() => {
+        this.$request.put(`/goods/reject/${id}`).then(res => {
+          if (res.code === '200') {
+            this.$message.success('审核拒绝');
+            this.load(this.pageNum);
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
+      }).catch(() => {});
+    },
+    // 批量同意
+    approveBatch() {
+      if (!this.ids.length) {
+        this.$message.warning('请选择商品');
+        return;
+      }
+      this.$confirm('您确定批量同意审核这些商品吗？', '确认审核', { type: 'success' }).then(() => {
+        this.$request.put('/goods/approveBatch',this.ids).then(res => {
+          if (res.code === '200') {
+            this.$message.success('批量审核通过');
+            this.load(this.pageNum);
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
+      }).catch(() => {});
+    },
+    // 批量拒绝
+    rejectBatch() {
+      if (!this.ids.length) {
+        this.$message.warning('请选择商品');
+        return;
+      }
+      this.$confirm('您确定批量拒绝审核这些商品吗？', '确认审核', { type: 'warning' }).then(() => {
+        this.$request.put('/goods/rejectBatch', this.ids).then(res => {
+          if (res.code === '200') {
+            this.$message.success('批量审核拒绝');
+            this.load(this.pageNum);
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
+      }).catch(() => {});
     },
     load(pageNum) {  // 分页查询
       if (pageNum) this.pageNum = pageNum
