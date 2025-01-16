@@ -47,7 +47,7 @@
 
         <el-table-column label="操作" width="240" align="center">
           <template v-slot="scope">
-            <el-button plain type="primary" @click="handleEdit(scope.row)" size="mini">编辑</el-button>
+<!--            <el-button plain type="primary" @click="handleEdit(scope.row)" size="mini">编辑</el-button>-->
 <!--            <el-button plain type="success" size="mini" @click="approve(scope.row.id)">审核</el-button>-->
             <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
           </template>

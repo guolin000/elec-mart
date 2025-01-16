@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="operation">
-      <el-button type="primary" plain @click="handleAdd">发布商品</el-button>
+      <el-button type="primary" plain @click="handleAdd">商品发布</el-button>
       <el-button type="danger" plain @click="delBatch">批量删除</el-button>
       <el-button type="success" plain @click="toggleBatchGoodsUp">批量上下架</el-button>
       <el-button id="seckill-button" plain @click="openSeckillDialog" style="background-color: #ff5e5e; color: white;">上架秒杀</el-button>
@@ -543,6 +543,10 @@ export default {
         endDate: endTime,
         price: this.seckillForm.seckillPrice,
         num: this.seckillForm.num,
+      }
+      if (data.num > 13){
+        this.$message.warning('商品库存不足！');
+        return;
       }
       this.$request.post('/seckill/add?goodsId=' + this.ids.pop() + '&startDate=' + data.startDate + '&endDate=' + data.endDate
           + '&price=' + data.price + '&num=' + data.num).then(res => {
