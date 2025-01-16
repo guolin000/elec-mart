@@ -11,4 +11,5 @@ public interface SecondTypeMapper {
     void insert(SecondType secondType);
     void updateById(SecondType secondType);
     void deleteById(Integer id);
+    int countByName(String name);
 }
