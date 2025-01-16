@@ -11,7 +11,7 @@
               :autoplay="true"
               style="width: 45px; height: 40px;"
           ></lottie-animation>
-          <div style="color: #FE0137FF; margin: 15px 0 15px 0px; font-weight: bold; font-size: 18px">商品分类</div>
+          <div style="margin: 15px 0 15px 0px; font-weight: bold; font-size: 18px" class="section-title">商品分类</div>
         </div>
         <div style="display: flex; margin: 0 25px; height: 550px;background: #f5f7fa;">
           <div style="flex: 2">
@@ -259,7 +259,7 @@ export default {
 
 .section-title {
   height: 40px;
-  background-color: #04BF04FF;
+  background-color: #bbddff;
   font-size: 20px;
   color: white;
   width: 130px;

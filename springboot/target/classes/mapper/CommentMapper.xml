@@ -10,11 +10,12 @@
 
     <select id="selectAll" resultType="com.example.entity.Comment">
         select comment.*, business.name as businessName, goods.img as goodsImg, goods.name as goodsName, goods.price as goodsPrice, goods.unit as goodUnit,
-               user.name as userName
+               user.name as userName,second_type.name as typeName
         from comment
         left join business on comment.business_id = business.id
         left join goods on comment.goods_id = goods.id
         left join user on comment.user_id = user.id
+        left join second_type on goods.type_id = second_type.id
         <where>
             <if test="id != null"> and id= #{id}</if>
             <if test="userId != null"> and user_id = #{userId}</if>
@@ -22,6 +23,9 @@
             <if test="goodsId != null"> and goods_id = #{goodsId}</if>
             <if test="time != null"> and time = #{time}</if>
             <if test="content != null"> and content like concat('%', #{content}, '%') </if>
+            <if test="businessName != null"> and business.name like concat('%', #{businessName}, '%') </if>
+            <if test="userName != null"> and user.name like concat('%', #{userName}, '%') </if>
+            <if test="typeName != null"> and second_type.name like concat('%', #{typeName}, '%') </if>
         </where>
     </select>
 
