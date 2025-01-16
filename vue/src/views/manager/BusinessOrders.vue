@@ -51,7 +51,7 @@
         <el-table-column label="操作" width="180" align="center">
           <template v-slot="scope">
             <el-button plain type="primary" size="mini" v-if="scope.row.status === '待发货'" @click="updateStatus(scope.row, '待收货')">发货</el-button>
-            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
+<!--            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>

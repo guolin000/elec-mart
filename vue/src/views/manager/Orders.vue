@@ -20,9 +20,9 @@
       </div>
     </div>
 
-    <div class="operation">
-      <el-button type="danger" plain @click="delBatch">批量删除</el-button>
-    </div>
+<!--    <div class="operation">-->
+<!--      <el-button type="danger" plain @click="delBatch">批量删除</el-button>-->
+<!--    </div>-->
 
     <div class="table">
       <el-table :data="tableData" stripe  @selection-change="handleSelectionChange">
@@ -50,12 +50,12 @@
         <el-table-column prop="useraddress" label="收货地址" show-overflow-tooltip></el-table-column>
         <el-table-column prop="phone" label="联系电话" show-overflow-tooltip></el-table-column>
         <el-table-column prop="status" label="订单状态" show-overflow-tooltip></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
-          <template v-slot="scope">
-            <el-button plain type="primary" size="mini" v-if="user.role === 'USER' && scope.row.status === '待发货'" @click="updateStatus(scope.row, '待收货')">发货</el-button>
-            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
-          </template>
-        </el-table-column>
+<!--        <el-table-column label="操作" width="180" align="center">-->
+<!--          <template v-slot="scope">-->
+<!--            <el-button plain type="primary" size="mini" v-if="user.role === 'USER' && scope.row.status === '待发货'" @click="updateStatus(scope.row, '待收货')">发货</el-button>-->
+<!--&lt;!&ndash;            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>&ndash;&gt;-->
+<!--          </template>-->
+<!--        </el-table-column>-->
       </el-table>
 
       <div class="pagination">
