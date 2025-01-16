@@ -544,6 +544,10 @@ export default {
         price: this.seckillForm.seckillPrice,
         num: this.seckillForm.num,
       }
+      if (data.num > 13){
+        this.$message.warning('商品库存不足！');
+        return;
+      }
       this.$request.post('/seckill/add?goodsId=' + this.ids.pop() + '&startDate=' + data.startDate + '&endDate=' + data.endDate
           + '&price=' + data.price + '&num=' + data.num).then(res => {
         if (res.code === '200') {
