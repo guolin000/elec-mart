@@ -107,7 +107,7 @@
         </set>
         where id = #{id}
     </update>
-    <update id="updateStatusById">update orders set status = "待发货" where id = #{id}</update>
+    <update id="updateStatusById">update orders set status = '待发货' where id = #{id}</update>
 
     <!-- 查询商家在指定日期的订单总数 -->
     <select id="selectOrderCountByMerchantIdAndDate" resultType="int">
